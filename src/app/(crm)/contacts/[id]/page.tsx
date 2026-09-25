@@ -2,8 +2,8 @@
 
 import { ArrowLeft, Building2, CalendarDays, CheckSquare, FileText, Globe, Handshake, Mail, MoreHorizontal, Pencil, Phone, Trash2, User, UserX } from "lucide-react";
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 import { NoteComposer } from "@/components/crm/NoteComposer";
 import { ActivityItem, CompanyLink, ExtraFields, ContactStatusBadge, deleteRecord, InfoRow, OwnerCell, QuickAction, StageBadge, StatBox, TaskRow, Timeline } from "@/components/crm/shared";
 import { Menu } from "@/components/ui/overlay";
@@ -19,7 +19,6 @@ type Tab = "overview" | "deals" | "activities" | "tasks" | "notes";
 export default function ContactDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const money = useMoney();
   const contact = useCRM((s) => s.contacts.find((c) => c.id === id));
   const company = useCRM((s) => s.companies.find((c) => c.id === contact?.companyId));
@@ -27,18 +26,6 @@ export default function ContactDetailPage() {
   const allActivities = useCRM((s) => s.activities);
   const allTasks = useCRM((s) => s.tasks);
   const [tab, setTab] = useState<Tab>("overview");
-
-  useEffect(() => {
-    if (!contact) return;
-    const action = searchParams.get("action");
-    if (action === "call" || action === "email") {
-      openForm("activity", { defaults: { contactId: contact.id, companyId: contact.companyId, type: action, subject: `${action === "call" ? "Call with" : "Email to"} ${contactName(contact)}` } });
-      router.replace(`/contacts/${contact.id}`);
-    } else if (action === "task") {
-      openForm("task", { defaults: { contactId: contact.id, companyId: contact.companyId, title: `Follow up with ${contactName(contact)}` } });
-      router.replace(`/contacts/${contact.id}`);
-    }
-  }, [contact, router, searchParams]);
 
   const deals = useMemo(() => allDeals.filter((d) => d.contactId === id), [allDeals, id]);
   const activities = useMemo(() => allActivities.filter((a) => a.contactId === id).sort((a, b) => b.date.localeCompare(a.date)), [allActivities, id]);

@@ -59,8 +59,7 @@ export default function TasksPage() {
         : a.dueDate.localeCompare(b.dueDate) || PRIORITIES.indexOf(b.priority) - PRIORITIES.indexOf(a.priority),
     );
 
-  // Imported completed tasks may not have a completedAt timestamp; status is authoritative.
-  const doneThisWeek = scoped.filter((t) => t.status === "done" && (!t.completedAt || Date.now() - new Date(t.completedAt).getTime() < 7 * 86_400_000)).length;
+  const doneThisWeek = scoped.filter((t) => t.completedAt && Date.now() - new Date(t.completedAt).getTime() < 7 * 86_400_000).length;
 
   return (
     <>
