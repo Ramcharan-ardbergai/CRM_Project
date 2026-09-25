@@ -120,11 +120,11 @@ export function CommandSearch() {
               if (e.key === "Escape") setOpen(false);
             }}
             placeholder="Search contacts, companies, deals, tickets, tasks…"
-            className="h-14 flex-1 bg-transparent text-[15px] text-fg outline-none placeholder:text-subtle"
+            className="h-14 flex-1 bg-transparent text-[.9375rem] text-fg outline-none placeholder:text-subtle"
           />
           <kbd className="rounded border border-line px-1.5 py-0.5 text-[11px] text-muted">Esc</kbd>
         </div>
-        <div ref={listRef} className="scroll-thin max-h-[420px] overflow-y-auto p-2">
+        <div ref={listRef} className="scroll-thin max-h-[26.25rem] overflow-y-auto p-2">
           {results.length === 0 ? (
             <p className="py-12 text-center text-sm text-muted">No results for &ldquo;{q}&rdquo;</p>
           ) : (

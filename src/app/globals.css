@@ -141,6 +141,12 @@
   background: linear-gradient(145deg, #6475ff 0%, #4054e8 48%, #2938bb 100%);
   box-shadow: 0 8px 20px -8px rgba(64, 84, 232, 0.8), inset 0 1px 0 rgba(255,255,255,.35);
 }
+
+/* Recreate the approved 80%-zoom desktop density through the real layout unit.
+   Rendering, hit testing, fixed positioning, and responsive breakpoints stay native. */
+@media (min-width: 1024px) {
+  html { font-size: 80%; }
+}
 .marketing-primary-button {
   background: linear-gradient(135deg, #5367f1 0%, #4054e8 55%, #3343cb 100%);
   box-shadow: 0 10px 24px -10px rgba(64, 84, 232, .7), inset 0 1px 0 rgba(255,255,255,.24);

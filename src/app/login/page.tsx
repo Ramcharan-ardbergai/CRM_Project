@@ -54,7 +54,7 @@ function LoginForm() {
   };
 
   return (
-    <main className="grid min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#fbfbfd] lg:grid-cols-[minmax(390px,.82fr)_minmax(0,1.18fr)]">
+    <main className="login-page grid min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#fbfbfd] lg:grid-cols-[minmax(24.375rem,.82fr)_minmax(0,1.18fr)]">
       <section className="relative flex min-h-screen min-w-0 max-w-full flex-col overflow-hidden px-5 py-6 sm:px-10 sm:py-8 lg:px-12 xl:px-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(64,84,232,.06),transparent_34%)]" aria-hidden="true" />
         <div className="auth-enter auth-enter-1 relative flex items-center justify-between">
@@ -62,31 +62,31 @@ function LoginForm() {
           <Link href="/" className="rounded-lg px-3 py-2 text-xs font-semibold text-[#6d7488] transition-colors hover:bg-white hover:text-[#2b3249]">Back to website</Link>
         </div>
 
-        <div className="auth-enter auth-enter-2 relative mx-auto flex w-full min-w-0 max-w-[410px] flex-1 flex-col justify-center py-12 sm:py-16">
+        <div className="auth-enter auth-enter-2 relative mx-auto flex w-full min-w-0 max-w-[25.625rem] flex-1 flex-col justify-center py-12 sm:py-16">
           <div className="mb-8">
             <span className="mb-5 flex h-10 w-10 items-center justify-center rounded-xl border border-[#dfe3ff] bg-[#f3f4ff] text-[#4054e8]"><ShieldCheck className="h-5 w-5" /></span>
-            <h1 className="text-[32px] leading-tight font-semibold tracking-[-.045em] text-[#11162e] sm:text-[38px]">Welcome back.</h1>
-            <p className="mt-2 text-[15px] leading-6 text-[#747b8e]">Sign in to continue to your workspace.</p>
+            <h1 className="text-[2rem] leading-tight font-semibold tracking-[-.045em] text-[#11162e] sm:text-[2.375rem]">Welcome back.</h1>
+            <p className="mt-2 text-[.9375rem] leading-6 text-[#747b8e]">Sign in to continue to your workspace.</p>
           </div>
 
           <form onSubmit={submit} className="space-y-4" noValidate>
             <Field label="Work email">
               <div className="relative">
                 <Mail className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#959bad]" />
-                <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} onFocus={() => setVisualState("email")} onBlur={() => !loading && setVisualState("idle")} className="h-12 rounded-xl border-[#dfe2ea] bg-white pl-10 text-[15px] shadow-[0_2px_8px_rgba(20,25,55,.025)]" autoComplete="email" aria-invalid={!!error} required />
+                <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} onFocus={() => setVisualState("email")} onBlur={() => !loading && setVisualState("idle")} className="h-12 rounded-xl border-[#dfe2ea] bg-white pl-10 text-[.9375rem] shadow-[0_2px_8px_rgba(20,25,55,.025)]" autoComplete="email" aria-invalid={!!error} required />
               </div>
             </Field>
             <Field label="Password">
               <div className="relative">
                 <Lock className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#959bad]" />
-                <Input type={showPassword ? "text" : "password"} value={password} onChange={(e) => { setPassword(e.target.value); setError(""); }} onFocus={() => setVisualState("password")} onBlur={() => !loading && setVisualState("idle")} className="h-12 rounded-xl border-[#dfe2ea] bg-white pr-11 pl-10 text-[15px] shadow-[0_2px_8px_rgba(20,25,55,.025)]" autoComplete="current-password" aria-invalid={!!error} required />
+                <Input type={showPassword ? "text" : "password"} value={password} onChange={(e) => { setPassword(e.target.value); setError(""); }} onFocus={() => setVisualState("password")} onBlur={() => !loading && setVisualState("idle")} className="h-12 rounded-xl border-[#dfe2ea] bg-white pr-11 pl-10 text-[.9375rem] shadow-[0_2px_8px_rgba(20,25,55,.025)]" autoComplete="current-password" aria-invalid={!!error} required />
                 <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute top-1/2 right-2.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#8d93a4] hover:bg-[#f1f2f6] hover:text-[#4e556a]" aria-label={showPassword ? "Hide password" : "Show password"}>
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </Field>
             {error && <div role="alert" className="rounded-xl border border-[#f2caca] bg-[#fff6f6] px-3.5 py-3 text-[13px] leading-5 text-[#b83238]">{error}</div>}
-            <Button type="submit" variant="primary" className="marketing-primary-button h-12 w-full rounded-xl border-0 text-[15px]" loading={loading || !hydrated}>Sign in <ArrowRight className="h-4 w-4" /></Button>
+            <Button type="submit" variant="primary" className="marketing-primary-button h-12 w-full rounded-xl border-0 text-[.9375rem]" loading={loading || !hydrated}>Sign in <ArrowRight className="h-4 w-4" /></Button>
           </form>
 
           <div className="mt-8 border-t border-[#e8eaf0] pt-6">
@@ -111,10 +111,10 @@ function LoginForm() {
       </section>
 
       <aside className="relative hidden min-h-screen overflow-hidden bg-[#0c1230] p-8 lg:flex lg:flex-col lg:justify-center xl:p-12" aria-label="FocusCRM product preview">
-        <div className="auth-enter auth-enter-3 relative mx-auto w-full max-w-[760px]">
+        <div className="auth-enter auth-enter-3 relative mx-auto w-full max-w-[47.5rem]">
           <div className="mb-9 max-w-xl">
             <p className="text-[11px] font-semibold tracking-[.14em] text-[#91a0ff] uppercase">Your customer relationships</p>
-            <h2 className="mt-4 text-3xl leading-[1.05] font-semibold tracking-[-.045em] text-white xl:text-[42px]">One intelligent workspace. Complete visibility.</h2>
+            <h2 className="mt-4 text-3xl leading-[1.05] font-semibold tracking-[-.045em] text-white xl:text-[2.625rem]">One intelligent workspace. Complete visibility.</h2>
             <p className="mt-4 max-w-lg text-sm leading-6 text-white/52">Move from pipeline performance to the detail behind a conversation without losing context.</p>
           </div>
           <div className={cn("auth-visual login-product-preview relative", `auth-visual-${visualState}`)}><DashboardPreview compact showInsights={false} /></div>

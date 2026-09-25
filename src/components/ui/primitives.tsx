@@ -18,7 +18,7 @@ const variants: Record<Variant, string> = {
   soft: "bg-primary-soft text-primary hover:brightness-95",
 };
 const sizes: Record<Size, string> = {
-  sm: "h-8 px-2.5 text-[13px] gap-1.5 rounded-lg",
+  sm: "h-8 px-2.5 text-[.8125rem] gap-1.5 rounded-lg",
   md: "h-9 px-3.5 text-sm gap-2 rounded-lg",
   icon: "h-9 w-9 rounded-lg",
   "icon-sm": "h-7 w-7 rounded-md",
@@ -51,7 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {loading ? (
         <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent" />
       ) : (
-        Icon && <Icon className={size === "icon-sm" ? "h-4 w-4" : "h-[17px] w-[17px]"} strokeWidth={2} />
+        Icon && <Icon className={size === "icon-sm" ? "h-4 w-4" : "h-[1.0625rem] w-[1.0625rem]"} strokeWidth={2} />
       )}
       {children}
     </button>
@@ -86,13 +86,13 @@ export function Select({ className, children, invalid, ...p }: SelectHTMLAttribu
 }
 
 export function Textarea({ className, ...p }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea className={cn(control, "min-h-[84px] resize-y py-2", className)} {...p} />;
+  return <textarea className={cn(control, "min-h-[5.25rem] resize-y py-2", className)} {...p} />;
 }
 
 export function Field({ label, error, children, className, required }: { label: string; error?: string; children: ReactNode; className?: string; required?: boolean }) {
   return (
     <label className={cn("flex flex-col gap-1.5", className)}>
-      <span className="text-[13px] font-medium text-fg-2">
+      <span className="text-[.8125rem] font-medium text-fg-2">
         {label}
         {required && <span className="ml-0.5 text-[var(--red)]">*</span>}
       </span>
@@ -114,7 +114,7 @@ export function Checkbox({ checked, onChange, indeterminate, className, label }:
         onChange(!checked);
       }}
       className={cn(
-        "flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border transition-all",
+        "flex h-[1.125rem] w-[1.125rem] shrink-0 items-center justify-center rounded-[.3125rem] border transition-all",
         checked || indeterminate ? "border-primary bg-primary text-white" : "border-line-strong bg-surface hover:border-primary",
         className,
       )}
@@ -137,8 +137,8 @@ export function CardHeader({ title, subtitle, action, className }: { title: Reac
   return (
     <div className={cn("flex items-start justify-between gap-3 px-5 pt-5 pb-3", className)}>
       <div className="min-w-0">
-        <h3 className="text-[15px] font-semibold tracking-tight text-fg">{title}</h3>
-        {subtitle && <p className="mt-0.5 text-[13px] text-muted">{subtitle}</p>}
+        <h3 className="text-[.9375rem] font-semibold tracking-tight text-fg">{title}</h3>
+        {subtitle && <p className="mt-0.5 text-[.8125rem] text-muted">{subtitle}</p>}
       </div>
       {action}
     </div>
@@ -147,7 +147,7 @@ export function CardHeader({ title, subtitle, action, className }: { title: Reac
 
 export function CardLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <Link href={href} className="shrink-0 rounded-md px-2 py-1 text-[13px] font-medium text-primary transition-colors hover:bg-primary-soft">
+    <Link href={href} className="shrink-0 rounded-md px-2 py-1 text-[.8125rem] font-medium text-primary transition-colors hover:bg-primary-soft">
       {children}
     </Link>
   );
@@ -222,7 +222,7 @@ export function EmptyState({ icon: Icon, title, description, action, className }
         <Icon className="h-6 w-6" />
       </div>
       <p className="text-sm font-semibold text-fg">{title}</p>
-      {description && <p className="mt-1 max-w-xs text-[13px] text-muted">{description}</p>}
+      {description && <p className="mt-1 max-w-xs text-[.8125rem] text-muted">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
   );
@@ -242,7 +242,7 @@ export function Tabs<T extends string>({ tabs, value, onChange, className }: { t
         >
           {t.label}
           {t.count !== undefined && (
-            <span className={cn("rounded-full px-1.5 text-[11px] font-semibold", value === t.id ? "bg-primary-soft text-primary" : "bg-surface-2 text-muted")}>
+            <span className={cn("rounded-full px-1.5 text-[.6875rem] font-semibold", value === t.id ? "bg-primary-soft text-primary" : "bg-surface-2 text-muted")}>
               {t.count}
             </span>
           )}
@@ -260,7 +260,7 @@ export function Segmented<T extends string>({ options, value, onChange, classNam
           key={o.id}
           onClick={() => onChange(o.id)}
           className={cn(
-            "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[13px] font-medium transition-all",
+            "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[.8125rem] font-medium transition-all",
             value === o.id ? "bg-surface text-fg shadow-card" : "text-muted hover:text-fg",
           )}
         >
