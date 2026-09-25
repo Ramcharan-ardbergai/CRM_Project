@@ -1,11 +1,11 @@
 "use client";
 
-import { AlertCircle, ArrowUpRight, Building2, CalendarClock, CheckSquare, Handshake, LifeBuoy, Plus, Trophy, UserPlus, Users, Wallet, Zap, type LucideIcon } from "lucide-react";
+import { AlertCircle, ArrowUpRight, Building2, CalendarClock, CheckSquare, Handshake, LifeBuoy, Plus, Trophy, UserPlus, Users, Wallet, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Ring, Sparkline, TrendChart, useChartTheme } from "@/components/charts";
 import { ActivityItem, CompanyLink, OwnerCell, StageBadge, TaskRow, dueState } from "@/components/crm/shared";
-import { Avatar, Button, Card, CardHeader, CardLink, EmptyState, IconTile, Progress, Segmented, Select, Trend } from "@/components/ui/primitives";
+import { Avatar, Button, Card, CardHeader, CardLink, CompanyAvatar, EmptyState, IconTile, Progress, Segmented, Select, Trend } from "@/components/ui/primitives";
 import type { Tone } from "@/lib/constants";
 import { useData, useMoney } from "@/lib/hooks";
 import { dashboardKpis, dealStats, monthlyRevenue, ownerPerformance, stageSummary, topCompanies } from "@/lib/metrics";
@@ -133,7 +133,6 @@ export default function DashboardPage() {
               ))}
             </Select>
           </div>
-          <Button icon={Zap} onClick={() => openForm("activity", { defaults: companyId ? { companyId } : undefined })}>Log activity</Button>
           <Button variant="primary" icon={Plus} onClick={() => openForm("deal", { defaults: companyId ? { companyId } : undefined })}>New deal</Button>
         </div>
       </div>
@@ -320,9 +319,7 @@ export default function DashboardPage() {
             {customers.length === 0 && <EmptyState icon={Building2} title="No won revenue linked to a company yet" description="Won deals appear here once they are associated with a company." className="py-8" />}
             {customers.map((c, i) => (
               <Link key={c.company.id} href={`/companies/${c.company.id}`} className="group flex items-center gap-3 border-b border-line py-3 last:border-0">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-2 text-muted">
-                  <Building2 className="h-4 w-4" />
-                </span>
+                <CompanyAvatar name={c.company.name} size={36} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-fg group-hover:text-primary">{c.company.name}</p>
                   <Progress value={(c.revenue / customers[0]!.revenue) * 100} className="mt-1.5 h-1" color={i === 0 ? chart.primary : undefined} />

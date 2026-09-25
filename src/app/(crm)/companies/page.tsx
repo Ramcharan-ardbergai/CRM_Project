@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { deleteRecord, OwnerCell, RowActions } from "@/components/crm/shared";
 import { DataTable, type Column } from "@/components/ui/DataTable";
-import { Button, EmptyState, Input, PageHeader, Select } from "@/components/ui/primitives";
+import { Button, CompanyAvatar, EmptyState, Input, PageHeader, Select } from "@/components/ui/primitives";
 import { INDUSTRIES } from "@/lib/constants";
 import { useData, useDebounced, useMoney } from "@/lib/hooks";
 import { isOpen } from "@/lib/metrics";
@@ -54,7 +54,7 @@ export default function CompaniesPage() {
       sortValue: (c) => c.name,
       cell: (c) => (
         <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-2 text-sm font-semibold text-fg-2">{c.name.charAt(0)}</span>
+          <CompanyAvatar name={c.name} size={36} />
           <div>
             <p className="font-medium text-fg group-hover:text-primary">{c.name}</p>
             <p className="text-xs text-muted">{c.website}</p>

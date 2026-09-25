@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 import { NoteComposer } from "@/components/crm/NoteComposer";
 import { ActivityItem, CompanyLink, ExtraFields, ContactStatusBadge, deleteRecord, InfoRow, OwnerCell, QuickAction, StageBadge, StatBox, TaskRow, Timeline } from "@/components/crm/shared";
 import { Menu } from "@/components/ui/overlay";
-import { Avatar, Button, Card, CardHeader, EmptyState, Tabs } from "@/components/ui/primitives";
+import { Avatar, Button, Card, CardHeader, CompanyAvatar, EmptyState, Tabs } from "@/components/ui/primitives";
 import { contactName, useMoney } from "@/lib/hooks";
 import { isOpen } from "@/lib/metrics";
 import { useCRM } from "@/lib/store";
@@ -97,7 +97,7 @@ export default function ContactDetailPage() {
             <Card className="p-5">
               <p className="text-xs font-medium tracking-wide text-muted uppercase">Company</p>
               <Link href={`/companies/${company.id}`} className="group mt-3 flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface-2 text-muted"><Building2 className="h-5 w-5" /></span>
+                <CompanyAvatar name={company.name} size={44} />
                 <div>
                   <p className="font-semibold text-fg group-hover:text-primary">{company.name}</p>
                   <p className="text-xs text-muted">{[company.industry, company.city, company.website].filter(Boolean).join(" · ")}</p>
