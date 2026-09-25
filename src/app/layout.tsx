@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 // Apply the saved theme before first paint to avoid a flash.
-const themeScript = `try{var s=JSON.parse(localStorage.getItem("focus-crm-v2")||"{}");if(s.state&&s.state.settings&&s.state.settings.theme==="dark")document.documentElement.classList.add("dark")}catch(e){}`;
+const themeScript = `try{var s=JSON.parse(localStorage.getItem("focus-crm-v3")||"{}");if(s.state&&s.state.settings&&s.state.settings.theme==="dark")document.documentElement.classList.add("dark")}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

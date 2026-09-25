@@ -158,7 +158,7 @@ export function Toaster() {
   const toasts = useUI((s) => s.toasts);
   const dismiss = useUI((s) => s.dismissToast);
   return (
-    <div className="pointer-events-none fixed right-4 bottom-4 z-[80] flex w-[calc(100%-2rem)] max-w-sm flex-col gap-2">
+    <div className="pointer-events-none fixed right-4 bottom-20 z-[80] flex w-[calc(100%-2rem)] max-w-sm flex-col gap-2">
       {toasts.map((t) => {
         const Icon = toastIcon[t.tone];
         return (

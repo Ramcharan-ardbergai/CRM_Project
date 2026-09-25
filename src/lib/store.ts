@@ -235,7 +235,7 @@ export const useCRM = create<CRMState>()(
       };
     },
     {
-      name: "focus-crm-v2",
+      name: "focus-crm-v3",
       storage: createJSONStorage(() => localStorage),
       partialize: ({ add, update, remove, moveDeal, setTicketStatus, toggleTask, updateSettings, updateUser, login, logout, toggleSidebar, importFromCSV, clearAll, ...data }) => data,
     },

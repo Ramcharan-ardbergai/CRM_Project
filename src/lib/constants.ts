@@ -75,6 +75,11 @@ export const INDUSTRIES = [
   "Education",
   "Media",
   "Real Estate",
+  "Hospitality",
+  "Energy",
+  "Legal",
+  "Professional Services",
+  "Nonprofit",
 ];
 
-export const EMPLOYEE_RANGES = ["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"];
+export const EMPLOYEE_RANGES = ["1-10", "11-50", "51-200", "201-500", "501-1000", "1001-5000", "5000+"];
