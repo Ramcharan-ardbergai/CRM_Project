@@ -1,4 +1,7 @@
+"use client";
+
 import { ArrowUpRight, Building2, Check, CheckSquare, Mail, MessageSquareText, MoreHorizontal, Phone, Sparkles, Target, Users } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const avatar = (initials: string, color: string) => (
@@ -7,7 +10,41 @@ const avatar = (initials: string, color: string) => (
   </span>
 );
 
-export function DashboardPreview({ compact = false, showInsights = true }: { compact?: boolean; showInsights?: boolean }) {
+function AnimatedMetric({ value, prefix = "", suffix = "", decimals = 0 }: { value: number; prefix?: string; suffix?: string; decimals?: number }) {
+  const elementRef = useRef<HTMLParagraphElement>(null);
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDisplayValue(value);
+      return;
+    }
+
+    let animationFrame = 0;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      const startedAt = performance.now();
+      const animate = (now: number) => {
+        const progress = Math.min((now - startedAt) / 720, 1);
+        setDisplayValue(value * (1 - Math.pow(1 - progress, 3)));
+        if (progress < 1) animationFrame = requestAnimationFrame(animate);
+      };
+      animationFrame = requestAnimationFrame(animate);
+    }, { threshold: 0.45 });
+    observer.observe(element);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [value]);
+
+  return <p ref={elementRef} aria-label={`${prefix}${value.toFixed(decimals)}${suffix}`} className="mt-1 text-sm font-semibold tracking-tight text-[#12172c] tabular-nums sm:text-base">{prefix}{displayValue.toFixed(decimals)}{suffix}</p>;
+}
+
+export function DashboardPreview({ compact = false, showInsights = true, animateMetrics = false }: { compact?: boolean; showInsights?: boolean; animateMetrics?: boolean }) {
   return (
     <div className={cn("product-stage relative mx-auto w-full min-w-0 max-w-full", compact ? "sm:max-w-[620px]" : "sm:max-w-[1080px]")} aria-label="FocusCRM dashboard preview">
       <div className="product-glow" aria-hidden="true" />
@@ -44,14 +81,16 @@ export function DashboardPreview({ compact = false, showInsights = true }: { com
             </div>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {[
-                ["Pipeline", "$1.84M", "+18.4%", "#4054e8"],
-                ["Won revenue", "$428K", "+12.7%", "#15803d"],
-                ["Active deals", "64", "+8.2%", "#7c5cf0"],
-                ["Win rate", "42.8%", "+3.1%", "#0e7f9a"],
-              ].map(([label, value, trend, color]) => (
-                <div key={label} className="rounded-xl border border-[#e8eaf1] bg-white p-2.5 shadow-[0_2px_8px_rgba(20,25,55,.03)] sm:p-3">
+                { label: "Pipeline", value: 1.84, prefix: "$", suffix: "M", decimals: 2, trend: "+18.4%", color: "#4054e8" },
+                { label: "Won revenue", value: 428, prefix: "$", suffix: "K", decimals: 0, trend: "+12.7%", color: "#15803d" },
+                { label: "Active deals", value: 64, prefix: "", suffix: "", decimals: 0, trend: "+8.2%", color: "#7c5cf0" },
+                { label: "Win rate", value: 42.8, prefix: "", suffix: "%", decimals: 1, trend: "+3.1%", color: "#0e7f9a" },
+              ].map(({ label, value, prefix, suffix, decimals, trend, color }) => (
+                <div key={label} className="dashboard-metric rounded-xl border border-[#e8eaf1] bg-white p-2.5 shadow-[0_2px_8px_rgba(20,25,55,.03)] sm:p-3">
                   <div className="flex items-center justify-between"><p className="text-[9px] text-[#858b9c]">{label}</p><span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} /></div>
-                  <p className="mt-1 text-sm font-semibold tracking-tight text-[#12172c] sm:text-base">{value}</p>
+                  {animateMetrics
+                    ? <AnimatedMetric value={value} prefix={prefix} suffix={suffix} decimals={decimals} />
+                    : <p className="mt-1 text-sm font-semibold tracking-tight text-[#12172c] tabular-nums sm:text-base">{prefix}{value.toFixed(decimals)}{suffix}</p>}
                   <p className="mt-1 text-[8px] font-semibold text-[#15803d]">↗ {trend}</p>
                 </div>
               ))}
@@ -78,7 +117,7 @@ export function DashboardPreview({ compact = false, showInsights = true }: { com
                     ["Prepare Q4 renewal", "Tomorrow", false],
                     ["Send onboarding brief", "Friday", false],
                   ].map(([task, date, done]) => (
-                    <div key={String(task)} className="flex items-center gap-2 rounded-lg bg-[#f8f9fc] p-2">
+                    <div key={String(task)} className="dashboard-activity flex items-center gap-2 rounded-lg bg-[#f8f9fc] p-2">
                       <span className={cn("flex h-4 w-4 items-center justify-center rounded-full border", done ? "border-[#4054e8] bg-[#4054e8] text-white" : "border-[#d8dbe5]")}>{done && <Check className="h-2.5 w-2.5" />}</span>
                       <div className="min-w-0 flex-1"><p className={cn("truncate text-[8px] font-medium text-[#30364d]", done && "line-through opacity-50")}>{task}</p><p className="text-[7px] text-[#9aa0b0]">{date}</p></div>
                     </div>

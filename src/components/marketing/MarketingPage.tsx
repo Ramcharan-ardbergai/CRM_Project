@@ -2,7 +2,7 @@
 
 import { ArrowRight, BarChart3, Building2, Check, CheckSquare, CircleDot, ContactRound, Mail, Menu, MessageSquareText, Phone, Target, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { FocusBrand } from "./Brand";
 import { CustomerPreview, DashboardPreview, PipelinePreview, RelationshipMap } from "./ProductVisuals";
@@ -24,12 +24,70 @@ const timeline = [
 export function MarketingPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const productRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 18);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const product = productRef.current;
+    if (!product) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    let frame = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let targetX = 0;
+    let targetY = 0;
+
+    const render = () => {
+      currentX += (targetX - currentX) * 0.075;
+      currentY += (targetY - currentY) * 0.075;
+      product.style.setProperty("--product-x", currentX.toFixed(2));
+      product.style.setProperty("--product-y", currentY.toFixed(2));
+      product.style.setProperty("--product-light-x", `${50 + currentX * 16}%`);
+      product.style.setProperty("--product-light-y", `${24 + currentY * 12}%`);
+      if (Math.abs(targetX - currentX) > 0.02 || Math.abs(targetY - currentY) > 0.02) {
+        frame = requestAnimationFrame(render);
+      }
+    };
+
+    const move = (event: PointerEvent) => {
+      if (reducedMotion.matches || !desktop.matches) return;
+      const bounds = product.getBoundingClientRect();
+      targetX = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+      targetY = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(render);
+    };
+
+    const reset = () => {
+      targetX = 0;
+      targetY = 0;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(render);
+    };
+
+    const settle = () => {
+      const progress = Math.min(window.scrollY / 260, 1);
+      product.style.setProperty("--product-settle", progress.toFixed(3));
+    };
+
+    product.addEventListener("pointermove", move, { passive: true });
+    product.addEventListener("pointerleave", reset);
+    window.addEventListener("scroll", settle, { passive: true });
+    settle();
+    return () => {
+      cancelAnimationFrame(frame);
+      product.removeEventListener("pointermove", move);
+      product.removeEventListener("pointerleave", reset);
+      window.removeEventListener("scroll", settle);
+    };
   }, []);
 
   return (
@@ -49,7 +107,9 @@ export function MarketingPage() {
             {nav.map((item) => <a key={item.label} href={item.href} className="rounded-lg px-3 py-2 text-[13px] font-medium text-[#5f667b] transition-colors hover:bg-[#f2f3f7] hover:text-[#151a32]">{item.label}</a>)}
           </div>
           <div className="ml-auto hidden items-center gap-2 sm:flex">
-            <Link href="/login" className="rounded-lg px-3 py-2 text-[13px] font-semibold text-[#363d55] transition-colors hover:bg-[#f2f3f7]">Sign in</Link>
+            <Link href="/login" className="marketing-signin-button group flex h-10 items-center gap-2 rounded-[11px] px-[18px] text-sm font-semibold">
+              Sign in <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+            </Link>
           </div>
           <button onClick={() => setMobileOpen((value) => !value)} className="ml-auto flex h-9 w-9 items-center justify-center rounded-lg text-[#343b52] hover:bg-[#f2f3f7] sm:hidden" aria-label={mobileOpen ? "Close navigation" : "Open navigation"} aria-expanded={mobileOpen}>
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -59,7 +119,9 @@ export function MarketingPage() {
           <div className="mx-auto mt-2 max-w-7xl animate-pop-in rounded-2xl border border-[#dde0ea] bg-white p-3 shadow-[0_24px_60px_-28px_rgba(15,22,60,.4)] sm:hidden">
             {nav.map((item) => <a key={item.label} href={item.href} onClick={() => setMobileOpen(false)} className="block rounded-xl px-3 py-3 text-sm font-medium text-[#4f566c] hover:bg-[#f4f5f8]">{item.label}</a>)}
             <div className="mt-2 border-t border-[#e8eaf0] pt-3">
-              <Link href="/login" className="flex h-10 w-full items-center justify-center rounded-lg border border-[#dfe2eb] text-sm font-semibold">Sign in</Link>
+              <Link href="/login" className="marketing-signin-button group flex h-10 w-full items-center justify-center gap-2 rounded-[11px] px-[18px] text-sm font-semibold">
+                Sign in <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+              </Link>
             </div>
           </div>
         )}
@@ -84,8 +146,8 @@ export function MarketingPage() {
               <p className="hero-enter hero-enter-5 mt-8 flex items-center gap-2 text-[11px] text-[#858b9c]"><CircleDot className="h-3.5 w-3.5 text-[#4054e8]" /> Contacts, pipeline, activity and reporting—connected.</p>
             </div>
 
-            <div id="product" className="hero-enter hero-enter-5 relative min-w-0 py-4 lg:pl-5">
-              <DashboardPreview compact />
+            <div ref={productRef} id="product" className="hero-product-shell hero-enter hero-enter-5 relative min-w-0 py-4 lg:pl-5">
+              <div className="hero-product-depth"><DashboardPreview compact animateMetrics /></div>
             </div>
           </div>
           <div className="mx-auto grid max-w-7xl border-t border-[#e9ebf1] px-5 sm:grid-cols-3 sm:px-8">
