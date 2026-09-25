@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { ACTIVITY_MAP, CONTACT_STATUS_TONE, PRIORITY_TONE, STAGE_MAP, TICKET_STATUS_TONE } from "@/lib/constants";
 import { contactName, useLookup } from "@/lib/hooks";
 import { useCRM, type CollectionKey } from "@/lib/store";
@@ -124,6 +125,7 @@ export function dueState(task: Task) {
 export function TaskRow({ task, showAssignee = true, compact }: { task: Task; showAssignee?: boolean; compact?: boolean }) {
   const toggleTask = useCRM((s) => s.toggleTask);
   const lookup = useLookup();
+  const router = useRouter();
   const state = dueState(task);
   const related = task.dealId ? lookup.deals.get(task.dealId)?.name : task.companyId ? lookup.companies.get(task.companyId)?.name : null;
   return (
@@ -137,7 +139,14 @@ export function TaskRow({ task, showAssignee = true, compact }: { task: Task; sh
         }}
         className="rounded-full"
       />
-      <button className="min-w-0 flex-1 text-left" onClick={() => openForm("task", { id: task.id })}>
+      <button
+        className="min-w-0 flex-1 text-left"
+        onClick={() => {
+          const action = /^call\b/i.test(task.title) ? "call" : /^e-?mail\b/i.test(task.title) ? "email" : /schedule|follow.?up/i.test(task.title) ? "task" : null;
+          if (task.contactId && action) router.push(`/contacts/${task.contactId}?action=${action}`);
+          else openForm("task", { id: task.id });
+        }}
+      >
         <p className={cn("truncate text-sm font-medium", task.status === "done" ? "text-subtle line-through" : "text-fg")}>{task.title}</p>
         <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-muted">
           <span className={cn(state === "overdue" && "font-medium text-tone-red", state === "today" && "font-medium text-tone-amber")}>
@@ -175,7 +184,7 @@ export function ActivityItem({ activity, showRelations = true }: { activity: Act
               </p>
             )}
           </div>
-          <div className="flex shrink-0 items-center gap-1">
+      <div className="flex shrink-0 self-end items-center gap-1 pb-0.5">
             {activity.status === "planned" ? (
               <Button
                 size="sm"
