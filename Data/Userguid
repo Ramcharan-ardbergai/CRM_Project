@@ -1,0 +1,569 @@
+# Focus CRM — User Guide
+
+Everything you need to find your way around Focus CRM: where each feature lives, what every
+screen shows, and how to take a customer from first contact to closed deal and support ticket.
+No prior CRM experience needed.
+
+For: sales reps, managers, support agents and first-time viewers.
+
+---
+
+## Contents
+
+1. Getting started
+2. Where do I go to…
+3. The screen at a glance
+4. End-to-end walkthrough
+5. Pages
+   - 5.1 Dashboard
+   - 5.2 Contacts
+   - 5.3 Companies
+   - 5.4 Deals and the deal panel
+   - 5.5 Pipeline
+   - 5.6 Activities
+   - 5.7 Tasks
+   - 5.8 Calendar
+   - 5.9 Tickets
+   - 5.10 Reports
+   - 5.11 Settings
+6. Creating and editing records
+7. Your data
+8. Stages, statuses and metrics
+9. Keyboard shortcuts
+10. Questions and fixes
+
+---
+
+## 1. Getting started
+
+Focus CRM keeps everything about your customers in one place:
+
+- **Contacts**: the people you talk to
+- **Companies**: the organisations they work for
+- **Deals**: the sales opportunities you are working on
+- **Activities and tasks**: the work around them (calls, emails, meetings, notes, follow-ups)
+- **Tickets**: customer support requests
+
+Every record is linked, so opening any one of them shows you the full story.
+
+### Open the app
+
+An administrator starts it once from the project folder:
+
+    npm install
+    npm run dev
+
+Then open http://localhost:3000 in your browser.
+
+### Sign in
+
+The sign-in page lists the users found in your data. Click a name to fill in the email, or type it.
+
+- Email (example): `mmitchell@hubspot.com`
+- Password: `demo123`
+
+> **Tip:** The very first time the app opens, it reads the CSV files in the `Data` folder and builds
+> the CRM from them. You'll see "Importing records from the CSV files…" for a moment. After that,
+> it opens straight away.
+
+---
+
+## 2. Where do I go to…
+
+| I want to… | Go to | How |
+|---|---|---|
+| See how things are going today | Dashboard | Sidebar → Dashboard. The chips under the greeting show overdue tasks, tasks due today and events scheduled today. |
+| Find any person, company, deal, ticket or task | Search | Press `Ctrl K` (`⌘ K` on Mac) or click the search bar at the top. Results are grouped by type. |
+| Add a contact | Contacts | **Add contact** on the Contacts page, or **+ New → Contact** from any page. |
+| Add a company | Companies | **Add company**, or **+ New → Company**. |
+| Create a deal | Deals or Pipeline | **New deal**, **+ New → Deal**, the **+** at the top of a pipeline column, or **Deal** on a contact or company page (fills in the links for you). |
+| Move a deal to the next stage | Pipeline | Drag the card to another column. Or open the deal and click a stage on the stage bar. |
+| Mark a deal as won or lost | Deal panel | Open the deal → **Mark won** / **Mark lost**. On the board: card **…** menu → Mark won / Mark lost. |
+| Reopen a closed deal | Deal panel | Open a won or lost deal → **Reopen deal**. It goes back to Negotiation. |
+| Log a call, email or meeting | Any page | **+ New → Activity**, **Log activity** on the Dashboard, or **Call** / **Email** on a contact page. |
+| Add a note to a contact or company | Contact / company page | Click **Note** (opens the Notes tab), type, then **Add note** or `Ctrl Enter`. |
+| Create a follow-up task | Tasks | **New task**, **+ New → Task**, **Task** on a contact page, or **Add task** in a deal panel. |
+| Complete a task | Tasks or Dashboard | Click the round checkbox next to it. Click again to reopen. |
+| See what I have due or overdue | Tasks | Tasks → **My tasks**, then the **Overdue** or **Today** tab. The red number on Tasks in the sidebar is your due-today plus overdue count. |
+| Schedule something for a date | Calendar | Click the day → **+ Event** or **+ Task**. Or use **Schedule** at the top. |
+| Open a support ticket | Tickets | **New ticket**, **+ New → Ticket**, or **Ticket** on a company page. |
+| Resolve or change a ticket's status | Ticket page | Open the ticket → **Resolve ticket**, the status bar, or the **Status** dropdown. |
+| Reply to or comment on a ticket | Ticket page | Type in the **Activity** box → **Post**. |
+| Update many records at once | Contacts, Deals, Tickets | Tick the checkboxes on the left of the rows. Bulk buttons appear above the table. |
+| Export a list to CSV / Excel | Contacts, Companies, Deals, Reports | Click **Export**. The file contains the rows currently shown (after filters). |
+| Show or hide table columns | Any table | Click **Columns** at the top right of the table. |
+| See revenue, win rate and team results | Reports | Sidebar → Reports. Choose a period at the top right. |
+| Switch to dark mode | Top bar or Settings | Moon icon in the top bar, your profile menu, or Settings → Appearance. |
+| Change currency symbol | Settings | Settings → Currency (US Dollar or Indian Rupee). Amounts are not converted. |
+| Change my name or the workspace name | Settings | Settings → Profile & workspace → **Save changes**. |
+| Reload data from the CSV files | Settings | Settings → Data → **Re-import CSV data**. Also in the workspace menu at the top of the sidebar. |
+| See where each record came from | Settings | Settings → **Data sources**. Every record's timeline also starts with "imported from <file>". |
+| Sign out | Profile menu | Click your avatar (top right) or your name (bottom of the sidebar) → **Sign out**. |
+
+---
+
+## 3. The screen at a glance
+
+Every page shares the same frame: a sidebar on the left for moving between sections, a top bar for
+search and quick actions, and the page itself in the middle.
+
+    +------------------+----------------------------------------------------------+
+    | Workspace menu   | [Search · Ctrl K]   [+ New]  [Theme] [Bell] [Avatar]     |  <- Top bar
+    |                  +----------------------------------------------------------+
+    | OVERVIEW         |                                                          |
+    |   Dashboard      |   Page title and main buttons                            |
+    | CRM              |                                                          |
+    |   Contacts       |   Page content                                           |
+    |   Companies      |                                                          |
+    |   Deals          |   (Clicking a deal anywhere opens the deal panel         |
+    |   Pipeline       |    from the right.)                                      |
+    | WORK             |                                                          |
+    |   Activities     |                                                          |
+    |   Tasks      (3) |                                                          |
+    |   Calendar       |                                                          |
+    |   Tickets    (9) |                                                          |
+    | INSIGHTS         |                                                          |
+    |   Reports        |                                                          |
+    | WORKSPACE        |                                                          |
+    |   Settings       |                                                          |
+    | You · profile    |                                                          |
+    +------------------+----------------------------------------------------------+
+         Sidebar
+
+| Part | What it does |
+|---|---|
+| Workspace menu | Top of the sidebar. Opens **Workspace settings** or **Re-import CSV data**. |
+| Sidebar sections | **CRM** holds your records. **Work** holds day-to-day follow-ups and support. **Insights** holds analytics. The highlighted item is the page you are on. |
+| Sidebar numbers | Red number on **Tasks**: your tasks due today or overdue. Blue number on **Tickets**: all tickets that are Open, In Progress or Waiting. |
+| Collapse arrow | The small round arrow on the sidebar's edge shrinks it to icons only. Hover an icon to see its name. Click again to expand. |
+| Search | Finds contacts, companies, deals, tickets and tasks by name, email, phone, city or ticket number. With nothing typed it shows quick actions. |
+| + New | Create a Contact, Company, Deal, Task, Activity or Ticket from anywhere. |
+| Moon / sun icon | Switches between light and dark mode. |
+| Bell | Your notifications: overdue tasks, tasks due today, High or Urgent tickets assigned to you, and events you have scheduled today. Click one to jump to it. **Mark all read** clears the red dot. |
+| Profile menu | Your avatar (top right) or name (bottom left): Settings, light/dark mode, Sign out. |
+| On a phone | The sidebar is hidden. Tap the ☰ button at the top left to open it. |
+
+---
+
+## 4. End-to-end walkthrough
+
+This 10-minute tour follows one customer through the whole CRM. It is also a good demo script.
+Everything you change updates the Dashboard and Reports immediately.
+
+1. **Sign in and read the Dashboard.** Sign in with `mmitchell@hubspot.com` / `demo123`. Look at the
+   chips under the greeting (overdue, due today, scheduled) and the six numbers across the top.
+   Click any number card to open the page behind it.
+2. **Find a customer.** Press `Ctrl K`, type **Lorelai**, press `Enter`. Her contact page opens with
+   her details, company, deals, tickets and history.
+3. **Open her company.** Click **The Dragonfly Inn**. The strip under the company name shows how
+   everything connects: Company → Contacts → Deals → Activities → Tickets. Click any of those
+   buttons to open that list.
+4. **Look at the company's deals.** Open the **Deals** tab and click a deal. The deal panel slides in
+   from the right with its value, stage bar, contact, close date and history.
+5. **Move the deal through the pipeline.** Go to **Pipeline**. Drag a card from one column to the next
+   (for example Contacted → Qualified). A message confirms the move and the numbers at the top
+   update. Drag to **Won** to close it: its contact becomes a **Customer**.
+6. **Log what happened.** Open the deal again → **Log activity**. Choose **Call**, enter a subject such
+   as "Pricing discussion", and save. It appears on the deal, contact and company timelines.
+7. **Plan the follow-up.** In the same panel click **Add task**. The title is pre-filled; set the due
+   date to today and save.
+8. **Complete the task.** Back on the Dashboard, the task is in **My Tasks**. Tick its circle. A
+   "Task completed" message confirms it, and the due-today chip and sidebar number go down.
+9. **Handle a support request.** Go to **Tickets**, open a ticket, add a note in **Activity** and press
+   **Post**. Then click **Resolve ticket**. The open-ticket counts drop everywhere.
+10. **Check the results.** Open **Reports** and choose **All time**. Won revenue, win rate, deals by
+    stage and sales by owner all reflect what you just did.
+
+---
+
+## 5. Pages
+
+### 5.1 Dashboard
+
+**Where:** Sidebar → Dashboard (the first page after sign-in)
+
+Your daily starting point. It answers: what needs my attention, how is the pipeline, and how are we doing?
+
+| Section | What it shows | What you can do |
+|---|---|---|
+| Greeting chips | Your overdue tasks, tasks due today, and events scheduled today. | Click a chip to open Tasks or Calendar. |
+| Log activity · New deal | The two most common actions. | Opens the matching form. |
+| Six number cards | **Total Contacts**, **New Leads** (leads added in the last 30 days), **Active Deals** (open deals), **Pipeline Value** (open deal amounts), **Won Revenue** (won in the last 30 days), **Open Tickets**. Each shows the change against the 30 days before, plus a small trend line. | Click a card to open its page. |
+| Revenue Trend | Won revenue per month for the last 12 months, plus all-time won and this month. | Switch **Value** / **Deals** to see money or number of deals. Hover the line for exact figures. |
+| My Tasks | Your next open tasks, earliest first. Overdue ones are red. | Tick to complete, click a title to edit, **Add task** to create one. |
+| Sales Pipeline | Open deals per stage, as a coloured bar and as tiles with count and value. | Click a tile or **Open board** to go to the Pipeline. |
+| Deal Conversion | Win rate ring, won vs lost count, average deal size, average sales cycle, weighted pipeline. | Read only. See section 8 for definitions. |
+| Recent Deals | The latest deals with stage, amount and owner. | Click a row to open the deal panel. |
+| Recent Activities | The latest completed calls, emails, meetings and notes. | Use the **…** menu to edit or delete. |
+| Sales Performance | Team members ranked by won revenue, with won count and win rate. | Read only. |
+| Top Customers | Companies with the most won revenue. | Click a company to open it. |
+
+> **Note:** If a chart says "No deals closed-won with a close date in the last 12 months", your data
+> simply has no recent wins. Reports → **All time** shows every closed deal.
+
+### 5.2 Contacts
+
+**Where:** Sidebar → Contacts
+
+Every person you deal with. Each contact can belong to one company and can have deals, activities,
+tasks, tickets and notes.
+
+**The contacts list**
+
+- **Tabs** across the top filter by status: All, Leads, Prospects, Customers, Inactives. The number
+  shows how many are in each.
+- **Search** by name, email, phone, company or job title. **All owners** narrows to one team member's contacts.
+- **Sort** by clicking a column heading. Click again to reverse, a third time to clear.
+- **Columns** (top right of the table) shows or hides columns such as Phone, Owner, Last Activity,
+  Created or Source.
+- **Rows** at the bottom sets 10, 20 or 50 per page. Use the page numbers to move through the list.
+- **Bulk actions**: tick rows on the left (the top box selects the whole page), then **Set status**,
+  **Assign owner** or **Delete**.
+- **Row menu** (**…** at the end of a row): Edit or Delete that contact.
+- **Export** downloads the rows you see as a CSV file. **Add contact** opens the form.
+
+**A contact's page** (click any row to open it)
+
+| Area | What's there |
+|---|---|
+| Header | Name, status badge, job title and company. Quick buttons: **Call** and **Email** (open a pre-filled activity form; Email also tries to open your mail app), **Task**, **Note**, **Deal**. The **…** button has Edit and Delete. |
+| About | Email, phone, company, owner, lead source, created date, and any extra fields that came from your CSV files (for example Favorite food or Company roles). **Edit** changes them. |
+| Company card | The contact's company. Click to open it. |
+| Four figures | Open pipeline, Won revenue, Open tasks, Last contacted. |
+| Tabs | **Timeline** (everything that happened, newest first), **Deals**, **Activities**, **Tasks**, **Notes** (write a note at the top, `Ctrl Enter` to save). |
+
+### 5.3 Companies
+
+**Where:** Sidebar → Companies
+
+The organisations you sell to or support. A company pulls together all its contacts, deals,
+activities and tickets.
+
+**The companies list**
+
+- Shows each company's location, number of contacts, open pipeline and won revenue. It starts sorted
+  by won revenue, highest first.
+- Search by name, city, industry or website. Filter by industry or owner. **Columns** adds Industry,
+  Open Tickets, Size or Created.
+- Tick rows to **Delete** several at once. **Export** and **Add company** are at the top.
+
+**A company's page**
+
+- **Quick buttons**: Contact, Deal, Activity, Ticket, Note. Anything you create here is linked to the
+  company automatically.
+- **Relationship strip**: Company → Contacts → Deals → Activities → Tickets, with counts. Click any
+  step to open that tab.
+- **About**: industry, size, phone, location, account owner, date added and extra CSV fields (such as
+  "Also known as" or "Associated companies").
+- **Figures**: open pipeline, won revenue, open tickets, last activity.
+- **Tabs**: Timeline, Contacts, Deals, Activities, Tickets, Notes.
+
+### 5.4 Deals and the deal panel
+
+**Where:** Sidebar → Deals
+
+A deal is a sales opportunity with an amount, a stage and an expected close date. The Deals page is
+the list view; the Pipeline is the board view of the same deals.
+
+**The deals list**
+
+- **Tabs**: Open (default), Won, Lost, All deals.
+- **Summary tiles** above the table: total value, weighted value (Open tab) or average deal size,
+  number of deals, high-priority count. They follow your filters.
+- **Filters**: search by deal or company, stage, priority, owner.
+- Sorted by **Expected Close**, soonest first. Open deals past their close date are marked red with "overdue".
+- **Bulk actions**: tick rows → **Move to stage** or **Delete**.
+- **Board view** switches to the Pipeline. **Export** and **New deal** are at the top.
+
+**The deal panel**
+
+Clicking a deal anywhere in the app (list, board, dashboard, search, contact or company page) opens
+this panel on the right. Press `Esc` or the **×** to close it.
+
+| Part | What it does |
+|---|---|
+| Top icons | Edit (pencil), Delete (bin), Close (×). |
+| Stage bar | Shows how far the deal has progressed. **Click any stage** to move the deal there. |
+| Mark won / Mark lost | Closes the deal. Winning also turns its contact into a Customer. Closed deals show **Reopen deal** instead. |
+| Details | Contact, company, expected close, probability and weighted value, priority, owner, plus imported fields such as HubSpot stage, Pipeline, Product of interest, Currency or Line items. |
+| Log activity · Add task | Creates a record already linked to this deal, its contact and its company. |
+| Timeline · Tasks | The deal's history (stage changes, activities, notes) and its tasks, which you can tick off here. |
+
+### 5.5 Pipeline
+
+**Where:** Sidebar → Pipeline (or **Board view** on Deals)
+
+A board with one column per stage. Each card is a deal. Moving cards is the fastest way to keep the
+pipeline current.
+
+- **Figures at the top**: Total pipeline, Weighted pipeline, Open deals, Won value, Win rate. They
+  update the moment you move a card.
+- **Filter** by deal or company name, or by owner. Untick **Show won / lost** to hide the closed columns.
+- **Each column** shows its deal count and total value. The **+** in the header or **Add deal** at
+  the bottom creates a deal already in that stage.
+- **Each card** shows deal name, company, amount, priority, expected close date (amber if within
+  7 days, red if past) and the owner's initials.
+- **Drag a card** to another column to change its stage. The column you're over is highlighted, and a
+  message confirms the move.
+- **Click a card** to open the deal panel. The card's **…** menu has Open, Edit, Mark won, Mark lost and Delete.
+
+> **Phones:** Dragging works with a mouse or trackpad. On a phone or tablet, tap the card and use the
+> stage bar in the deal panel instead.
+
+### 5.6 Activities
+
+**Where:** Sidebar → Activities
+
+A log of every interaction: Call, Email, Meeting, Note, Follow-up. Activities are either **Planned**
+(in the future) or **Completed**.
+
+- **Tabs** filter by type. Search by subject, description, contact or company. **Everyone** narrows to
+  one person. **All / Planned / Completed** filters by status.
+- **Upcoming** lists planned activities, soonest first. Click **Done** when one has happened.
+- **History** lists completed activities grouped by day. **Load more** shows older ones.
+- **Today's Schedule** (right) lists today's activities by time. Its **+** schedules a new one.
+- **Last 7 Days** (right) counts completed activities by type.
+- Each activity's **…** menu has Edit and Delete. **Log activity** is at the top.
+
+### 5.7 Tasks
+
+**Where:** Sidebar → Tasks
+
+Your to-do list. A task has a due date, a priority and an assignee, and can be linked to a contact,
+company or deal.
+
+- **My tasks / All tasks** at the top right switches between your own tasks and the whole team's.
+- **Four cards**: Overdue, Due today, Upcoming, Done this week. Click a card to filter to it.
+- **Tabs**: All (grouped into Overdue, Today, Upcoming, Completed), Today, Upcoming, Overdue, Completed.
+- **Filters**: search, priority, and assignee (under All tasks).
+- **Complete** a task by clicking its round checkbox. Click again to reopen it. Click the title to
+  edit, or use **…** to edit or delete.
+- Under each title: the due date (red "Overdue", amber "Today") and the deal or company it relates to.
+
+### 5.8 Calendar
+
+**Where:** Sidebar → Calendar
+
+A month view of activities and task due dates.
+
+- **My calendar / Team** switches between your items and everyone's.
+- Move between months with **‹** and **›**. **Today** jumps back to the current month. Today's date is circled.
+- Each day shows up to three items, coloured by activity type. Tasks start with ✓. Faded items are done.
+- **Click a day** to list everything on it in the right-hand panel. From there, **+ Task** adds a task
+  due that day and **+ Event** schedules an activity at 10:00 that day.
+- **Schedule** at the top creates a planned meeting on the selected day.
+
+### 5.9 Tickets
+
+**Where:** Sidebar → Tickets
+
+Customer support requests. Every ticket has a number (for example #1010), a priority, a status and
+an assignee, and can be linked to a contact and company.
+
+**The tickets list**
+
+- **Four cards**: Open tickets, Urgent / High, Avg resolution time, Resolved in the last 7 days.
+- **Tabs**: Active (Open + In Progress + Waiting, the default), then each status, then All.
+- **Filters**: search by subject, number or company; priority; assignee.
+- **Bulk actions**: tick rows → **Set status**, **Assign** or **Delete**.
+
+**A ticket's page**
+
+- **Resolve ticket** (or **Reopen** once closed), Edit, Delete.
+- **Status bar**: Open → In Progress → Waiting → Resolved → Closed. Click a step to set it.
+- **Activity**: write an internal note or record your reply and press **Post**. Status changes are
+  logged here automatically.
+- **Details**: change Status, Priority or Assignee from the dropdowns (saved immediately). Also shows
+  created, updated and resolved times, and imported fields such as Source or Issue of interest.
+- **Customer**: the linked contact, their email, company and account owner.
+
+### 5.10 Reports
+
+**Where:** Sidebar → Reports
+
+Analytics for managers and anyone preparing a review. Choose the period at the top right:
+**All time** (default), **30 days**, **90 days** or **12 months**. With a period other than All time,
+each figure is compared with the period just before it.
+
+| Report | Answers |
+|---|---|
+| Six figures | Won revenue, deals won, win rate, average deal size, conversion rate, average sales cycle. |
+| Revenue by Month | How much was won in each of the last 12 months. |
+| Deals by Stage | How many deals are in each stage and their value. |
+| Sales by Owner | Who won the most, with win rate and open deals. |
+| Activity Performance | How many calls, emails, meetings, notes and follow-ups each person completed. |
+| Customer Growth | How the number of contacts has grown over the year. |
+| Lead Sources | Where contacts come from and what share became customers. |
+
+**Export** downloads the figures, the per-person table and the monthly numbers as one CSV file.
+
+### 5.11 Settings
+
+**Where:** Sidebar → Settings (or the profile menu)
+
+- **Profile & workspace**: change your name, email and the workspace name, then **Save changes**.
+- **Preferences**: Appearance (Light / Dark) and Currency (US Dollar / Indian Rupee). Currency changes
+  the symbol and number format only; amounts are not converted.
+- **Team**: everyone in the workspace with their role.
+- **Data**: record counts, **Re-import CSV data** and **Clear all data**. See section 7.
+- **Data sources**: one row per CSV file, showing how many rows it had, what new records it created,
+  and anything that could not be linked.
+
+---
+
+## 6. Creating and editing records
+
+Every record type uses the same kind of form, opened from **+ New**, a page's main button, a quick
+button or an **Edit** action.
+
+- Fields marked `*` are required. If one is missing or wrong (for example an invalid email), the form
+  shows the problem under the field and does not save.
+- Save with the button at the bottom or `Ctrl Enter`. A message confirms "created" or "updated".
+- **Links fill themselves in**: picking a contact fills in their company; picking a deal fills in its
+  company and contact; changing the company clears a contact who works elsewhere.
+- **Deal stage sets probability**: choosing a stage fills in its standard probability. You can still type your own.
+- Forms opened from a contact, company, deal or calendar day arrive with those details already filled in.
+
+| Record | Required | Other fields |
+|---|---|---|
+| Contact | First name, last name, email | Phone, job title, company, status, lead source, owner |
+| Company | Company name | Industry, employees, website, phone, city, country, account owner |
+| Deal | Deal name, amount above 0, expected close date | Stage, probability, company, contact, priority, owner |
+| Task | Title, due date | Priority, assignee, status, company, contact, deal, notes |
+| Activity | Subject, date and time | Type, status (Completed / Planned), company, contact, deal, owner, description |
+| Ticket | Subject | Company, contact, priority, status, assignee, description |
+
+> **Deleting:** Every delete asks for confirmation first. Deleting a record does **not** delete the
+> records linked to it; they are simply unlinked. For example, deleting a company keeps its contacts,
+> just without a company. The one exception: deleting a ticket also removes the notes posted on it.
+
+---
+
+## 7. Your data
+
+Focus CRM's records come from the CSV files in the project's `Data` folder, which are HubSpot sample
+import files. There is no made-up demo data.
+
+1. **First load**: the app reads every `.csv` in `Data`, recognises each file by its column headings,
+   and creates contacts, companies, deals, tickets, calls, emails, notes and tasks.
+2. **Merging**: the same company, person, deal or ticket often appears in several files. They are
+   combined into one record by company website/name, contact email/name, and deal or ticket name.
+3. **Linking**: a row that mentions a company and a contact (or a deal and a note) links them. A
+   contact whose email matches a company's website is linked to that company.
+4. **Extra fields**: columns the CRM has no place for (Favorite food, Product of interest, Source,
+   original HubSpot stage and so on) are kept and shown on the record's page.
+5. **Your changes** are saved in this browser. They stay after you close the tab, but other browsers
+   and computers won't see them.
+
+| Action | What it does |
+|---|---|
+| Re-import CSV data | Settings → Data, or the workspace menu. Replaces all records with a fresh import from `Data`. Use it after adding or editing a CSV file. Your in-app changes are lost. |
+| Clear all data | Settings → Data. Deletes every record but keeps the team. Re-import brings the data back. |
+| Data sources | Settings → Data sources. Shows what each file contributed and anything left unlinked, such as emails that point to HubSpot IDs not present in the files, or product lists (there is no Products page). |
+| Timeline | Every imported record's timeline starts with "… imported from <file name>", so you can always trace it back. |
+
+### How HubSpot values are translated
+
+| In the CSV | In Focus CRM |
+|---|---|
+| Appointment scheduled | Contacted |
+| Qualified to buy | Qualified |
+| Presentation scheduled, Proposal sent | Proposal |
+| Decision maker bought-in, Contract sent | Negotiation |
+| Closed won / Closed lost | Won / Lost |
+| Ticket: New · Waiting on us · Waiting on contact · Closed | Open · In Progress · Waiting · Closed |
+| Lifecycle: Lead · Opportunity · Customer | Lead · Prospect · Customer |
+
+---
+
+## 8. Stages, statuses and metrics
+
+### Deal stages
+
+| Stage | Meaning | Probability |
+|---|---|---:|
+| New Lead | Just identified, no conversation yet. | 10% |
+| Contacted | First conversation or meeting booked. | 20% |
+| Qualified | Confirmed need, budget and decision maker. | 40% |
+| Proposal | Proposal or quote sent. | 60% |
+| Negotiation | Discussing terms or contract. | 80% |
+| Won | Signed. The contact becomes a Customer. | 100% |
+| Lost | Did not go ahead. | 0% |
+
+### Contact status
+
+- **Lead**: new, not yet engaged
+- **Prospect**: actively discussing a deal
+- **Customer**: has bought or receives support
+- **Inactive**: no longer active
+
+### Ticket status
+
+- **Open**: new
+- **In Progress**: being worked on
+- **Waiting**: waiting on the customer
+- **Resolved**: fixed
+- **Closed**: done
+
+"Active" means Open, In Progress or Waiting.
+
+### Metrics
+
+| Metric | Definition |
+|---|---|
+| Pipeline value | Total amount of all open deals (New Lead through Negotiation). |
+| Weighted pipeline | Each open deal's amount × its probability, added up. A realistic forecast. |
+| Won revenue | Total amount of deals marked Won in the chosen period. |
+| Win rate | Won ÷ (won + lost), for deals closed in the period. |
+| Conversion rate | Share of deals created in the period that are already won. |
+| Average deal size | Won revenue ÷ number of won deals. |
+| Sales cycle | Average days from a deal's creation to being won. Shows "—" when there is no dated data. |
+| Change vs last 30d | On dashboard cards: the difference compared with the same figure 30 days earlier. |
+
+---
+
+## 9. Keyboard shortcuts
+
+| Keys | Action |
+|---|---|
+| `Ctrl K` / `⌘ K` | Open or close search |
+| `↑` `↓` then `Enter` | Move through search results and open one |
+| `Ctrl Enter` | Save the open form, or save a note / ticket reply |
+| `Esc` | Close a form, dialog, menu, search or the deal panel |
+
+---
+
+## 10. Questions and fixes
+
+**I can't sign in**
+Use an email listed on the sign-in page (they come from your data) with password `demo123`. After a
+re-import, sign in again if you were signed out.
+
+**The app says it couldn't import the CSV data**
+Check that the `Data` folder exists in the project folder and contains `.csv` files, then click **Try again**.
+
+**I added a CSV file but see nothing new**
+Go to Settings → **Re-import CSV data**. Then check Settings → Data sources to see what the new file contributed.
+
+**A chart or card shows 0 or is empty**
+Most charts cover a time window (last 30 days or 12 months). The sample data's deals closed in
+2018–2019, so use Reports → **All time**.
+
+**My changes disappeared**
+Changes are stored in your browser. They are lost after a re-import, in a private window, on another
+browser, or if browser data is cleared. Clearing browser data makes the app import the CSV files
+again on next load.
+
+**I can't drag deals on my phone**
+Tap the card and use the stage bar in the deal panel.
+
+**Where did a record come from?**
+Open it and look at the bottom of its Timeline: "imported from <file>". Settings → Data sources lists every file.
+
+**Why does a deal show a different currency field?**
+Amounts are shown in the currency chosen in Settings. If the CSV had another currency, it's listed on
+the deal as "Currency"; the number is not converted.
+
+---
+
+Focus CRM · Built with Next.js and React · Data: HubSpot sample import files in `Data/`
