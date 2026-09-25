@@ -22,6 +22,7 @@ export default function ContactsPage() {
   const update = useCRM((s) => s.update);
   const [status, setStatus] = useState<"all" | ContactStatus>("all");
   const [owner, setOwner] = useState("");
+  const [companyFilter, setCompanyFilter] = useState("");
   const [q, setQ] = useState("");
   const query = useDebounced(q).trim().toLowerCase();
   const lastActivity = useMemo(() => lastActivityByContact(data), [data]);
@@ -31,11 +32,12 @@ export default function ContactsPage() {
       data.contacts.filter((c) => {
         if (status !== "all" && c.status !== status) return false;
         if (owner && c.ownerId !== owner) return false;
+        if (companyFilter === "none" ? c.companyId : companyFilter && c.companyId !== companyFilter) return false;
         if (!query) return true;
         const company = lookup.companies.get(c.companyId ?? "")?.name ?? "";
         return [contactName(c), c.email, c.phone, company, c.title].some((x) => x.toLowerCase().includes(query));
       }),
-    [data.contacts, status, owner, query, lookup],
+    [data.contacts, status, owner, companyFilter, query, lookup],
   );
 
   const columns: Column<Contact>[] = [
@@ -118,6 +120,11 @@ export default function ContactsPage() {
               <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-subtle" />
               <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search name, email, company…" className="pl-9" />
             </div>
+            <Select value={companyFilter} onChange={(e) => setCompanyFilter(e.target.value)} className="w-auto max-w-[220px]" aria-label="Filter by company">
+              <option value="">All companies</option>
+              <option value="none">No company</option>
+              {[...data.companies].sort((a, b) => a.name.localeCompare(b.name)).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </Select>
             <Select value={owner} onChange={(e) => setOwner(e.target.value)} className="w-auto">
               <option value="">All owners</option>
               {data.users.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}

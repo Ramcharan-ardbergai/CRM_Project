@@ -1,4 +1,4 @@
-import { STAGE_MAP } from "../constants";
+import { LEAD_SOURCES, STAGE_MAP } from "../constants";
 import type {
   Activity,
   Company,
@@ -7,7 +7,9 @@ import type {
   CRMData,
   Deal,
   DealStage,
+  LeadSource,
   Priority,
+  Role,
   Task,
   Ticket,
   TicketPriority,
@@ -96,7 +98,7 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
   let seq = 0;
   const id = (p: string) => `${p}${++seq}`;
 
-  const users = new Map<string, User & { refs: number }>();
+  const users = new Map<string, User & { refs: number; explicitRole?: boolean }>();
   const companies: (Company & { extra: Record<string, string> })[] = [];
   const contacts: (Contact & { extra: Record<string, string>; lifecycle: ContactStatus | null })[] = [];
   const deals: (Deal & { extra: Record<string, string> })[] = [];
@@ -112,6 +114,8 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
   const byContactName = new Map<string, Contact>();
   const byDealName = new Map<string, Deal>();
   const byTicketName = new Map<string, Ticket>();
+  const byDealId = new Map<string, Deal>();
+  const byTicketId = new Map<string, Ticket>();
   const seenActivity = new Set<string>();
   const seenTask = new Set<string>();
 
@@ -144,6 +148,37 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
     const isLineItem = has("quantity");
     const hasContactCols = has("first name", "last name", "email", "email address");
     const companyNameCol = has("company name") ? "company name" : has("name") && has("company domain name") ? "name" : "";
+
+    // "Create date" belongs to the file's main object.
+    const primary = has("ticket name")
+      ? "ticket"
+      : has("deal name") && has("deal stage")
+        ? "deal"
+        : hasContactCols && !has("call title", "meeting name", "email subject", "note body", "task title")
+          ? "contact"
+          : companyNameCol
+            ? "company"
+            : "";
+
+    // Team file: names and roles for owner emails.
+    if (has("user email")) {
+      for (const row of file.rows) {
+        const userId = owner(row["user email"] ?? "");
+        const u = [...users.values()].find((x) => x.id === userId);
+        if (!u) continue;
+        u.refs--; // registering a user isn't an assignment
+        const name = [row["user first name"], row["user last name"]].filter(Boolean).join(" ");
+        if (name) u.name = name;
+        const role = row["user role"] as Role | undefined;
+        if (role && ["Admin", "Sales Manager", "Account Executive", "Support Agent"].includes(role)) {
+          u.role = role;
+          u.explicitRole = true;
+        }
+        bump("users");
+      }
+      report.push(rep);
+      continue;
+    }
 
     if (isProduct) {
       rep.notes.push("Product catalogue — not imported (no Products module in this CRM).");
@@ -196,6 +231,11 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
         if (companyName) byCompanyName.set(norm(companyName), company);
         company.website ||= domain;
         company.city ||= row["city"] ?? "";
+        company.industry ||= row["industry"] ?? "";
+        company.employees ||= row["number of employees"] ?? "";
+        company.country ||= get(row, "country/region", "country");
+        if (row["company owner"]) company.ownerId ||= owner(row["company owner"]!);
+        if (primary === "company") company.createdAt = parseDate(row["create date"]) ?? company.createdAt;
         if (!hasContactCols) company.phone ||= row["phone number"] ?? "";
         if (companyName && norm(companyName) !== norm(company.name)) setExtra(company.extra, "Also known as", companyName);
         splitList(row["associated company domain name"] ?? "").forEach((d) => setExtra(company!.extra, "Associated companies", d));
@@ -238,6 +278,11 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
         contact.email ||= email;
         contact.phone ||= get(row, "mobile phone number", "phone number");
         contact.lifecycle ??= mapLifecycle(row["lifecycle stage"] ?? "");
+        contact.title ||= row["job title"] ?? "";
+        const src = LEAD_SOURCES.find((x) => x.toLowerCase() === (row["original source"] ?? "").toLowerCase());
+        if (src && contact.source === "Import") contact.source = src as LeadSource;
+        if (row["contact owner"]) contact.ownerId ||= owner(row["contact owner"]!);
+        if (primary === "contact") contact.createdAt = parseDate(row["create date"]) ?? contact.createdAt;
         if (company) contact.companyId ??= company.id;
         const label = row["association label"] ?? "";
         if (label) {
@@ -253,7 +298,8 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
       let deal: (typeof deals)[number] | undefined;
       const dealName = get(row, "deal name");
       if (dealName) {
-        deal = byDealName.get(norm(dealName)) as typeof deal;
+        const dealId = row["deal id"] ?? "";
+        deal = ((dealId && byDealId.get(dealId)) || byDealName.get(norm(dealName))) as typeof deal;
         const stageRaw = get(row, "deal stage");
         if (!deal) {
           const stage = mapStage(stageRaw);
@@ -274,6 +320,7 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
           };
           deals.push(deal);
           byDealName.set(norm(dealName), deal);
+          if (dealId) byDealId.set(dealId, deal);
           sourceFile.set(deal.id, file.name);
           bump("deals");
         }
@@ -283,6 +330,9 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
         setExtra(deal.extra, "HubSpot deal ID", row["deal id"] ?? "");
         setExtra(deal.extra, "Currency", row["deal currency"] ?? (/\$/.test(row["amount"] ?? "") ? "USD" : ""));
         if (!deal.amount) deal.amount = parseAmount(row["amount"]);
+        if (row["deal owner"]) deal.ownerId ||= owner(row["deal owner"]!);
+        if (row["deal priority"]) deal.priority = mapPriority(row["deal priority"]!);
+        if (primary === "deal") deal.createdAt = parseDate(row["create date"]) ?? deal.createdAt;
         const close = parseDate(row["close date"]);
         if (close && !deal.closeDate) deal.closeDate = close;
         if (company) {
@@ -312,8 +362,11 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
       let ticket: (typeof tickets)[number] | undefined;
       const ticketName = get(row, "ticket name");
       if (ticketName) {
-        ticket = byTicketName.get(norm(ticketName)) as typeof ticket;
+        const ticketKey = row["ticket id"] ? `id:${row["ticket id"]}` : norm(ticketName);
+        ticket = (byTicketId.get(ticketKey) ?? byTicketName.get(ticketKey)) as typeof ticket;
         if (!ticket) {
+          const created = parseDate(row["create date"]) ?? now;
+          const closed = parseDate(row["close date"]);
           const status = mapTicketStatus(row["ticket status"] ?? "");
           ticket = {
             id: id("tk"),
@@ -325,13 +378,14 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
             priority: mapTicketPriority(row["priority"] ?? ""),
             status,
             assigneeId: owner(row["ticket owner"] ?? ""),
-            createdAt: now,
-            updatedAt: now,
-            resolvedAt: status === "Closed" || status === "Resolved" ? now : null,
+            createdAt: created,
+            updatedAt: closed ?? created,
+            resolvedAt: status === "Closed" || status === "Resolved" ? (closed ?? now) : null,
             extra: {},
           };
           tickets.push(ticket);
-          byTicketName.set(norm(ticketName), ticket);
+          if (row["ticket id"]) byTicketId.set(ticketKey, ticket);
+          else byTicketName.set(ticketKey, ticket);
           sourceFile.set(ticket.id, file.name);
           bump("tickets");
         }
@@ -342,6 +396,7 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
         setExtra(ticket.extra, "Issued ticket before", row["issued ticket before?"] ?? "");
         const assoc = splitList(row["associated company record id"] ?? "");
         if (assoc.length) setExtra(ticket.extra, "Associated HubSpot company IDs", assoc.join(", "));
+        if (!ticket.description && row["ticket description"]) ticket.description = row["ticket description"]!;
         if (!ticket.description && row["issue of interest"]) ticket.description = `Issue: ${row["issue of interest"]}`;
         if (contact) {
           ticket.contactId ??= contact.id;
@@ -379,7 +434,24 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
             ownerId: owner(get(row, "activity assigned to")),
             ...rel,
           },
-          `call|${norm(row["call title"] ?? "")}|${rel.contactId ?? norm(row["call notes"] ?? "")}`,
+          `call|${norm(row["call title"] ?? "")}|${rel.contactId ?? norm(row["call notes"] ?? "")}|${row["call id"] ?? ""}`,
+        );
+      }
+
+      /* ---------- Meeting ---------- */
+      if (row["meeting name"]) {
+        const date = parseDate(get(row, "meeting start time", "activity date")) ?? now;
+        addActivity(
+          {
+            type: "meeting",
+            subject: row["meeting name"]!,
+            description: [row["meeting description"], row["meeting outcome"] && `Outcome: ${row["meeting outcome"]}`].filter(Boolean).join("\n"),
+            date,
+            status: new Date(date).getTime() > Date.now() ? "planned" : "completed",
+            ownerId: owner(get(row, "activity assigned to")),
+            ...rel,
+          },
+          `meeting|${norm(row["meeting name"]!)}|${date}|${rel.contactId ?? ""}`,
         );
       }
 
@@ -395,7 +467,7 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
             ownerId: owner(get(row, "activity assigned to")),
             ...rel,
           },
-          `note|${norm(row["note body"]!)}`,
+          `note|${norm(row["note body"]!)}|${row["activity date"] ?? ""}|${rel.companyId ?? ""}`,
         );
       }
 
@@ -407,19 +479,19 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
             type: "email",
             subject: row["email subject"]!,
             description: [row["email body"], [row["email direction"], row["email send status"]].filter(Boolean).join(" · ")].filter(Boolean).join("\n"),
-            date: now,
+            date: parseDate(row["activity date"]) ?? now,
             status: scheduled ? "planned" : "completed",
-            ownerId: "",
+            ownerId: owner(get(row, "activity assigned to")),
             ...rel,
           },
-          `email|${norm(row["email subject"]!)}`,
+          `email|${norm(row["email subject"]!)}|${row["activity date"] ?? ""}|${rel.contactId ?? ""}`,
         );
         if (unmatched) rep.notes.push(`Email "${row["email subject"]}" references HubSpot contact ID ${unmatched}, which isn't in the CSV files — imported without a contact.`);
       }
 
       /* ---------- Task ---------- */
       if (row["task title"]) {
-        const key = norm(row["task title"]!);
+        const key = `${norm(row["task title"]!)}|${row["task id"] ?? ""}`;
         if (!seenTask.has(key)) {
           seenTask.add(key);
           const done = /complete/i.test(row["task status"] ?? "");
@@ -449,9 +521,10 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
   }
 
   /* ---------- Owners ---------- */
-  let userList = [...users.values()].sort((a, b) => b.refs - a.refs);
+  // Admins first (they are the default sign-in), then by number of assigned records.
+  let userList = [...users.values()].sort((a, b) => Number(b.role === "Admin" && !!b.explicitRole) - Number(a.role === "Admin" && !!a.explicitRole) || b.refs - a.refs);
   if (!userList.length) userList = [{ id: "u1", name: "Workspace Admin", email: "admin@focuscrm.app", role: "Admin", color: USER_COLORS[0]!, refs: 0 }];
-  userList[0]!.role = "Admin";
+  if (!userList.some((u) => u.explicitRole)) userList[0]!.role = "Admin";
   const fallback = userList[0]!.id;
   const own = <T extends { ownerId: string }>(x: T) => (x.ownerId ||= fallback);
   companies.forEach(own);
@@ -462,7 +535,7 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
   tickets.forEach((t) => (t.assigneeId ||= fallback));
   // Support-only users (ticket owners, ticket note authors) get the support role.
   const ticketPeople = new Set([...tickets.map((t) => t.assigneeId), ...activities.filter((a) => a.ticketId).map((a) => a.ownerId)]);
-  userList.slice(1).forEach((u) => ticketPeople.has(u.id) && (u.role = "Support Agent"));
+  userList.slice(1).forEach((u) => !u.explicitRole && ticketPeople.has(u.id) && (u.role = "Support Agent"));
 
   /* ---------- Derived links & statuses ---------- */
   contacts.forEach((c) => {
@@ -490,12 +563,12 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
   });
 
   const events: TimelineEvent[] = [];
-  const ev = (text: string, rel: Partial<TimelineEvent>, key: string) =>
-    events.push({ id: id("e"), at: now, text: `${text} from “${sourceFile.get(key)}”`, userId: fallback, contactId: null, companyId: null, dealId: null, ticketId: null, ...rel });
-  companies.forEach((c) => ev(`Company imported`, { companyId: c.id }, c.id));
-  contacts.forEach((c) => ev(`Contact imported`, { contactId: c.id, companyId: c.companyId }, c.id));
-  deals.forEach((d) => ev(`Deal "${d.name}" imported`, { dealId: d.id, contactId: d.contactId, companyId: d.companyId }, d.id));
-  tickets.forEach((t) => ev(`Ticket imported`, { ticketId: t.id, contactId: t.contactId, companyId: t.companyId }, t.id));
+  const ev = (text: string, rel: Partial<TimelineEvent>, key: string, at = now) =>
+    events.push({ id: id("e"), at, text: `${text} from “${sourceFile.get(key)}”`, userId: fallback, contactId: null, companyId: null, dealId: null, ticketId: null, ...rel });
+  companies.forEach((c) => ev(`Company imported`, { companyId: c.id }, c.id, c.createdAt));
+  contacts.forEach((c) => ev(`Contact imported`, { contactId: c.id, companyId: c.companyId }, c.id, c.createdAt));
+  deals.forEach((d) => ev(`Deal "${d.name}" imported`, { dealId: d.id, contactId: d.contactId, companyId: d.companyId }, d.id, d.createdAt));
+  tickets.forEach((t) => ev(`Ticket imported`, { ticketId: t.id, contactId: t.contactId, companyId: t.companyId }, t.id, t.createdAt));
 
   const strip = <T extends object>(xs: T[], ...keys: string[]) =>
     xs.map((x) => Object.fromEntries(Object.entries(x).filter(([k]) => !keys.includes(k))) as T);
@@ -504,7 +577,7 @@ export function importHubSpot(files: { name: string; text: string; rows: Row[] }
     importedAt: now,
     report,
     data: {
-      users: userList.map(({ refs: _refs, ...u }) => u),
+      users: userList.map(({ refs: _refs, explicitRole: _explicit, ...u }) => u),
       companies,
       contacts: strip(contacts, "lifecycle"),
       deals,

@@ -9,6 +9,19 @@ export const runtime = "nodejs";
 
 const DATA_DIR = path.join(process.cwd(), "Data");
 
+/** Team → companies → contacts → deals → tickets → activities → line items. */
+function rank(rows: Record<string, string>[]) {
+  const cols = new Set(Object.keys(rows[0] ?? {}));
+  const has = (...k: string[]) => k.some((x) => cols.has(x));
+  if (has("user email")) return 0;
+  if (has("quantity")) return 6;
+  if (has("call title", "meeting name", "email subject", "note body", "task title")) return 5;
+  if (has("ticket name")) return 4;
+  if (has("deal name")) return 3;
+  if (has("first name", "last name", "email", "email address")) return 2;
+  return 1;
+}
+
 /** Reads every CSV in /Data and returns the merged CRM dataset. */
 export async function GET() {
   try {
@@ -19,9 +32,8 @@ export async function GET() {
         return { name, text, rows: parseCSV(text) };
       }),
     );
-    // Line-item files add to deal amounts, so they run after the deals exist.
-    const isLineItems = (f: (typeof files)[number]) => "quantity" in (f.rows[0] ?? {});
-    files.sort((a, b) => Number(isLineItems(a)) - Number(isLineItems(b)) || a.name.localeCompare(b.name));
+    // Import in dependency order so records exist before rows that reference them.
+    files.sort((a, b) => rank(a.rows) - rank(b.rows) || a.name.localeCompare(b.name));
     return NextResponse.json(importHubSpot(files));
   } catch (err) {
     return NextResponse.json({ error: `Could not read CSV files from ${DATA_DIR}: ${(err as Error).message}` }, { status: 500 });

@@ -7,6 +7,8 @@ import { Avatar, Button, Card, CardHeader, IconTile, PageHeader, Progress, Segme
 import { ACTIVITY_TYPES, LEAD_SOURCES, STAGES } from "@/lib/constants";
 import { useData, useMoney } from "@/lib/hooks";
 import { customerGrowth, dealStats, leadSources, monthlyRevenue, ownerPerformance, stageSummary } from "@/lib/metrics";
+import { useMeId } from "@/lib/store";
+import type { CRMData } from "@/lib/types";
 import { toast } from "@/lib/ui-store";
 import { DAY, downloadCSV, pctChange } from "@/lib/utils";
 import { Trend } from "@/components/ui/primitives";
@@ -14,43 +16,62 @@ import { Trend } from "@/components/ui/primitives";
 type Range = "all" | "30" | "90" | "365";
 const TYPE_COLORS: Record<string, string> = { call: "#16A34A", email: "#4054E8", meeting: "#7C5CF0", note: "#E08A00", "follow-up": "#0EA5C6" };
 
+/** Reports are account-scoped: include every record belonging to companies owned by the signed-in user. */
+function scopeToLoggedInUser(data: CRMData, userId: string): CRMData {
+  const companyIds = new Set(data.companies.filter((c) => c.ownerId === userId).map((c) => c.id));
+  const match = <T extends { companyId: string | null }>(rows: T[]) => rows.filter((row) => row.companyId !== null && companyIds.has(row.companyId));
+  return {
+    ...data,
+    companies: data.companies.filter((c) => companyIds.has(c.id)),
+    contacts: match(data.contacts),
+    deals: match(data.deals),
+    activities: match(data.activities),
+    tasks: match(data.tasks),
+    tickets: match(data.tickets),
+    events: match(data.events),
+  };
+}
+
 export default function ReportsPage() {
   const data = useData();
+  const meId = useMeId();
+  const scopedData = useMemo(() => scopeToLoggedInUser(data, meId), [data, meId]);
+  const me = data.users.find((u) => u.id === meId);
   const money = useMoney();
   const chart = useChartTheme();
   const [range, setRange] = useState<Range>("all");
   const days = range === "all" ? 0 : Number(range);
   const from = days ? Date.now() - days * DAY : 0;
 
-  const stats = useMemo(() => dealStats(data.deals, from), [data.deals, from]);
+  const stats = useMemo(() => dealStats(scopedData.deals, from), [scopedData.deals, from]);
   // Previous equal-length window for comparison.
   const prev = useMemo(() => {
     if (!days) return null;
     const prevFrom = from - days * DAY;
-    return dealStats(data.deals.filter((d) => new Date(d.createdAt).getTime() < from && (!d.closedAt || new Date(d.closedAt).getTime() < from)), prevFrom);
-  }, [data.deals, from, days]);
-  const monthly = useMemo(() => monthlyRevenue(data.deals, 12), [data.deals]);
-  const stages = useMemo(() => stageSummary(data.deals), [data.deals]);
-  const owners = useMemo(() => ownerPerformance(data, from), [data, from]);
-  const growth = useMemo(() => customerGrowth(data), [data]);
-  const sources = useMemo(() => leadSources(data), [data]);
+    return dealStats(scopedData.deals.filter((d) => new Date(d.createdAt).getTime() < from && (!d.closedAt || new Date(d.closedAt).getTime() < from)), prevFrom);
+  }, [scopedData.deals, from, days]);
+  const monthly = useMemo(() => monthlyRevenue(scopedData.deals, 12), [scopedData.deals]);
+  const stages = useMemo(() => stageSummary(scopedData.deals), [scopedData.deals]);
+  const owners = useMemo(() => ownerPerformance(scopedData, from), [scopedData, from]);
+  const growth = useMemo(() => customerGrowth(scopedData), [scopedData]);
+  const sources = useMemo(() => leadSources(scopedData), [scopedData]);
 
   const activityByOwner = useMemo(
     () =>
-      data.users
+      scopedData.users
         .map((u) => {
           const row: Record<string, string | number> = { name: u.name.split(" ")[0]! };
           ACTIVITY_TYPES.forEach((t) => {
-            row[t.id] = data.activities.filter((a) => a.ownerId === u.id && a.type === t.id && a.status === "completed" && (!from || new Date(a.date).getTime() >= from)).length;
+            row[t.id] = scopedData.activities.filter((a) => a.ownerId === u.id && a.type === t.id && a.status === "completed" && (!from || new Date(a.date).getTime() >= from)).length;
           });
           return row;
         })
         .filter((r) => ACTIVITY_TYPES.some((t) => (r[t.id] as number) > 0)),
-    [data, from],
+    [scopedData, from],
   );
 
   const sourceConversion = LEAD_SOURCES.map((s) => {
-    const all = data.contacts.filter((c) => c.source === s);
+    const all = scopedData.contacts.filter((c) => c.source === s);
     const customers = all.filter((c) => c.status === "Customer").length;
     return { source: s, total: all.length, customers, rate: all.length ? (customers / all.length) * 100 : 0 };
   }).sort((a, b) => b.rate - a.rate);
@@ -82,7 +103,7 @@ export default function ReportsPage() {
     <>
       <PageHeader
         title="Reports"
-        description="Understand revenue, pipeline health and team performance."
+        description={me ? `Showing complete data for ${scopedData.companies.length} ${scopedData.companies.length === 1 ? "company" : "companies"} owned by ${me.name}.` : "Understand revenue, pipeline health and team performance."}
         actions={
           <>
             <Segmented value={range} onChange={setRange} options={[{ id: "all", label: "All time" }, { id: "30", label: "30 days" }, { id: "90", label: "90 days" }, { id: "365", label: "12 months" }]} />
@@ -123,9 +144,9 @@ export default function ReportsPage() {
         </Card>
 
         <Card className="xl:col-span-4">
-          <CardHeader title="Deals by Stage" subtitle="All deals in the system" />
+          <CardHeader title="Deals by Stage" subtitle="Deals for your companies" />
           <div className="px-5 pb-5">
-            <Donut data={stages.map((s) => ({ name: s.label, value: s.count, color: s.color }))} center={{ value: String(data.deals.length), label: "Deals" }} height={180} />
+            <Donut data={stages.map((s) => ({ name: s.label, value: s.count, color: s.color }))} center={{ value: String(scopedData.deals.length), label: "Deals" }} height={180} />
             <div className="mt-4 space-y-2">
               {stages.map((s) => (
                 <div key={s.id} className="flex items-center gap-2 text-sm">

@@ -14,6 +14,7 @@ import {
   Plus,
   Search,
   Settings,
+  Sparkles,
   Sun,
   UserPlus,
   Zap,
@@ -150,6 +151,9 @@ export function Topbar() {
             { label: "Ticket", icon: LifeBuoy, onSelect: () => openForm("ticket") },
           ]}
         />
+        <Button icon={Sparkles} onClick={() => useUI.getState().setAssistantOpen(true)} className="max-md:hidden">
+          Ask AI
+        </Button>
         <div className="mx-1 hidden h-6 w-px bg-line sm:block" />
         <Button
           variant="ghost"

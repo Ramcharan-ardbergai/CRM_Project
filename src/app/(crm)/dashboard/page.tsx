@@ -1,21 +1,32 @@
 "use client";
 
-import { AlertCircle, ArrowUpRight, Building2, CalendarClock, CheckSquare, Handshake, LifeBuoy, Plus, Trophy, UserPlus, Users, Wallet, Zap, type LucideIcon } from "lucide-react";
+import { AlertCircle, ArrowUpRight, Building2, CalendarClock, CheckSquare, Handshake, LifeBuoy, Plus, Trophy, UserPlus, Users, Wallet, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Ring, Sparkline, TrendChart, useChartTheme } from "@/components/charts";
 import { ActivityItem, CompanyLink, OwnerCell, StageBadge, TaskRow, dueState } from "@/components/crm/shared";
-import { Avatar, Button, Card, CardHeader, CardLink, EmptyState, IconTile, Progress, Segmented, Trend } from "@/components/ui/primitives";
+import { Avatar, Button, Card, CardHeader, CardLink, CompanyAvatar, EmptyState, IconTile, Progress, Segmented, Select, Trend } from "@/components/ui/primitives";
 import type { Tone } from "@/lib/constants";
 import { useData, useMoney } from "@/lib/hooks";
 import { dashboardKpis, dealStats, monthlyRevenue, ownerPerformance, stageSummary, topCompanies } from "@/lib/metrics";
-import { useMe } from "@/lib/store";
+import type { CRMData } from "@/lib/types";
 import { openDeal, openForm } from "@/lib/ui-store";
 import { cn, formatDate, formatNumber, isSameDay, relativeTime } from "@/lib/utils";
 
-function greeting() {
-  const h = new Date().getHours();
-  return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+/** Limits every record to one company ("" = all companies). */
+function scopeToCompany(data: CRMData, companyId: string): CRMData {
+  if (!companyId) return data;
+  const match = <T extends { companyId: string | null }>(xs: T[]) => xs.filter((x) => x.companyId === companyId);
+  return {
+    ...data,
+    companies: data.companies.filter((c) => c.id === companyId),
+    contacts: match(data.contacts),
+    deals: match(data.deals),
+    activities: match(data.activities),
+    tasks: match(data.tasks),
+    tickets: match(data.tickets),
+    events: match(data.events),
+  };
 }
 
 function StatCard({ label, value, change, series, icon, tone, color, href, invert }: {
@@ -50,8 +61,10 @@ function StatCard({ label, value, change, series, icon, tone, color, href, inver
 }
 
 export default function DashboardPage() {
-  const data = useData();
-  const me = useMe();
+  const allData = useData();
+  const [companyId, setCompanyId] = useState("");
+  const data = useMemo(() => scopeToCompany(allData, companyId), [allData, companyId]);
+  const scopeName = companyId ? allData.companies.find((c) => c.id === companyId)?.name ?? "" : "";
   const money = useMoney();
   const chart = useChartTheme();
   const [trendMode, setTrendMode] = useState<"revenue" | "won">("revenue");
@@ -65,17 +78,18 @@ export default function DashboardPage() {
   const yearWon = monthly.reduce((s, m) => s + m.won, 0);
   const customers = useMemo(() => topCompanies(data, 5), [data]);
 
-  const myTasks = useMemo(
+  // Team-wide: the dashboard covers every owner, not just the signed-in user.
+  const upcomingTasks = useMemo(
     () =>
       data.tasks
-        .filter((t) => t.assigneeId === me.id && t.status === "todo")
+        .filter((t) => t.status === "todo")
         .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
-        .slice(0, 6),
-    [data.tasks, me.id],
+        .slice(0, 7),
+    [data.tasks],
   );
-  const overdue = data.tasks.filter((t) => t.assigneeId === me.id && dueState(t) === "overdue").length;
-  const dueToday = data.tasks.filter((t) => t.assigneeId === me.id && dueState(t) === "today").length;
-  const meetingsToday = data.activities.filter((a) => a.ownerId === me.id && a.status === "planned" && isSameDay(a.date, new Date())).length;
+  const overdue = data.tasks.filter((t) => dueState(t) === "overdue").length;
+  const dueToday = data.tasks.filter((t) => dueState(t) === "today").length;
+  const meetingsToday = data.activities.filter((a) => a.status === "planned" && isSameDay(a.date, new Date())).length;
 
   const recentActivities = useMemo(
     () => [...data.activities].filter((a) => a.status === "completed").sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5),
@@ -86,13 +100,16 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Greeting */}
+      {/* Header */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="text-sm text-muted">{formatDate(new Date().toISOString(), { weekday: "long", day: "numeric", month: "long" })}</p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight text-fg sm:text-[28px]">
-            {greeting()}, {me.name.split(" ")[0]} 👋
+            {scopeName || "Business overview"}
           </h1>
+          <p className="mt-1 text-sm text-muted">
+            {scopeName ? "Everything for this company, across the whole team." : `All ${allData.companies.length} companies · all ${allData.users.length} team members`}
+          </p>
           <div className="mt-2 flex flex-wrap gap-2 text-[13px]">
             <Link href="/tasks" className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1", overdue ? "tone-red" : "tone-gray")}>
               <AlertCircle className="h-3.5 w-3.5" /> {overdue} overdue
@@ -105,9 +122,18 @@ export default function DashboardPage() {
             </Link>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button icon={Zap} onClick={() => openForm("activity")}>Log activity</Button>
-          <Button variant="primary" icon={Plus} onClick={() => openForm("deal")}>New deal</Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="dash-company" className="sr-only">Company</label>
+          <div className="relative">
+            <Building2 className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-subtle" />
+            <Select id="dash-company" value={companyId} onChange={(e) => setCompanyId(e.target.value)} className="w-56 pl-9">
+              <option value="">All companies</option>
+              {[...allData.companies].sort((a, b) => a.name.localeCompare(b.name)).map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </Select>
+          </div>
+          <Button variant="primary" icon={Plus} onClick={() => openForm("deal", { defaults: companyId ? { companyId } : undefined })}>New deal</Button>
         </div>
       </div>
 
@@ -160,14 +186,14 @@ export default function DashboardPage() {
 
         {/* Upcoming tasks */}
         <Card className="flex flex-col xl:col-span-4">
-          <CardHeader title="My Tasks" subtitle={`${myTasks.length ? "Next up on your list" : "Nothing pending"}`} action={<CardLink href="/tasks">View all</CardLink>} />
+          <CardHeader title="Upcoming Tasks" subtitle={upcomingTasks.length ? "Next open tasks across the team" : "Nothing pending"} action={<CardLink href="/tasks">View all</CardLink>} />
           <div className="flex-1 divide-y divide-line px-5">
-            {myTasks.length ? myTasks.map((t) => <TaskRow key={t.id} task={t} compact showAssignee={false} />) : (
-              <EmptyState icon={CheckSquare} title="All caught up" description="No open tasks assigned to you." />
+            {upcomingTasks.length ? upcomingTasks.map((t) => <TaskRow key={t.id} task={t} compact />) : (
+              <EmptyState icon={CheckSquare} title="All caught up" description="No open tasks." />
             )}
           </div>
           <div className="border-t border-line p-3">
-            <Button variant="ghost" size="sm" icon={Plus} className="w-full" onClick={() => openForm("task")}>Add task</Button>
+            <Button variant="ghost" size="sm" icon={Plus} className="w-full" onClick={() => openForm("task", { defaults: companyId ? { companyId } : undefined })}>Add task</Button>
           </div>
         </Card>
 
@@ -293,9 +319,7 @@ export default function DashboardPage() {
             {customers.length === 0 && <EmptyState icon={Building2} title="No won revenue linked to a company yet" description="Won deals appear here once they are associated with a company." className="py-8" />}
             {customers.map((c, i) => (
               <Link key={c.company.id} href={`/companies/${c.company.id}`} className="group flex items-center gap-3 border-b border-line py-3 last:border-0">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-2 text-muted">
-                  <Building2 className="h-4 w-4" />
-                </span>
+                <CompanyAvatar name={c.company.name} size={36} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-fg group-hover:text-primary">{c.company.name}</p>
                   <Progress value={(c.revenue / customers[0]!.revenue) * 100} className="mt-1.5 h-1" color={i === 0 ? chart.primary : undefined} />

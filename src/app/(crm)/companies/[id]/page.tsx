@@ -7,7 +7,7 @@ import { Fragment, useMemo, useState } from "react";
 import { NoteComposer } from "@/components/crm/NoteComposer";
 import { ActivityItem, ContactStatusBadge, ExtraFields, deleteRecord, InfoRow, OwnerCell, QuickAction, StageBadge, StatBox, TicketStatusBadge, Timeline } from "@/components/crm/shared";
 import { Menu } from "@/components/ui/overlay";
-import { Avatar, Button, Card, CardHeader, EmptyState, Tabs } from "@/components/ui/primitives";
+import { Avatar, Button, Card, CardHeader, CompanyAvatar, EmptyState, Tabs } from "@/components/ui/primitives";
 import { OPEN_TICKET_STATUSES } from "@/lib/constants";
 import { contactName, useMoney } from "@/lib/hooks";
 import { isOpen } from "@/lib/metrics";
@@ -56,9 +56,7 @@ export default function CompanyDetailPage() {
       <Card className="p-5 sm:p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-4">
-            <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-soft to-surface-2 text-2xl font-semibold text-primary">
-              {company.name.charAt(0)}
-            </span>
+            <CompanyAvatar name={company.name} size={64} className="rounded-2xl text-2xl" />
             <div>
               <h1 className="text-2xl font-semibold tracking-tight text-fg">{company.name}</h1>
               <p className="mt-0.5 flex flex-wrap items-center gap-x-3 text-sm text-muted">

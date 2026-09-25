@@ -26,6 +26,7 @@ For: sales reps, managers, support agents and first-time viewers.
    - 5.9 Tickets
    - 5.10 Reports
    - 5.11 Settings
+   - 5.12 Focus AI assistant
 6. Creating and editing records
 7. Your data
 8. Stages, statuses and metrics
@@ -59,7 +60,7 @@ Then open http://localhost:3000 in your browser.
 
 The sign-in page lists the users found in your data. Click a name to fill in the email, or type it.
 
-- Email (example): `mmitchell@hubspot.com`
+- Email (example): `mmitchell@hubspot.com` (Morgan Mitchell, workspace admin, pre-filled)
 - Password: `demo123`
 
 > **Tip:** The very first time the app opens, it reads the CSV files in the `Data` folder and builds
@@ -72,9 +73,13 @@ The sign-in page lists the users found in your data. Click a name to fill in the
 
 | I want to… | Go to | How |
 |---|---|---|
-| See how things are going today | Dashboard | Sidebar → Dashboard. The chips under the greeting show overdue tasks, tasks due today and events scheduled today. |
+| See how the whole business is doing | Dashboard | Sidebar → Dashboard. It covers all companies and the whole team. The chips under the title show overdue tasks, tasks due today and events scheduled today. |
+| See the numbers for one company | Dashboard | Use the **All companies** selector at the top right of the Dashboard and pick a company. Every card and chart updates. |
+| Ask a question about my data | Focus AI | Click **Ask AI** (top bar or the round button at the bottom right), then type a question such as "Which deals are past their close date?". |
 | Find any person, company, deal, ticket or task | Search | Press `Ctrl K` (`⌘ K` on Mac) or click the search bar at the top. Results are grouped by type. |
 | Add a contact | Contacts | **Add contact** on the Contacts page, or **+ New → Contact** from any page. |
+| See the contacts of one company | Contacts | Use the **All companies** filter above the contacts table. Choose **No company** to find unlinked contacts. |
+| Pick or create a company in a form | Any form | Click the **Company** field and type to search. If it doesn't exist, choose **Create company "…"**. |
 | Add a company | Companies | **Add company**, or **+ New → Company**. |
 | Create a deal | Deals or Pipeline | **New deal**, **+ New → Deal**, the **+** at the top of a pipeline column, or **Deal** on a contact or company page (fills in the links for you). |
 | Move a deal to the next stage | Pipeline | Drag the card to another column. Or open the deal and click a stage on the stage bar. |
@@ -108,7 +113,7 @@ Every page shares the same frame: a sidebar on the left for moving between secti
 search and quick actions, and the page itself in the middle.
 
     +------------------+----------------------------------------------------------+
-    | Workspace menu   | [Search · Ctrl K]   [+ New]  [Theme] [Bell] [Avatar]     |  <- Top bar
+    | Workspace menu   | [Search · Ctrl K]  [+ New] [Ask AI] [Theme] [Bell] [Avatar]|  <- Top bar
     |                  +----------------------------------------------------------+
     | OVERVIEW         |                                                          |
     |   Dashboard      |   Page title and main buttons                            |
@@ -138,6 +143,7 @@ search and quick actions, and the page itself in the middle.
 | Collapse arrow | The small round arrow on the sidebar's edge shrinks it to icons only. Hover an icon to see its name. Click again to expand. |
 | Search | Finds contacts, companies, deals, tickets and tasks by name, email, phone, city or ticket number. With nothing typed it shows quick actions. |
 | + New | Create a Contact, Company, Deal, Task, Activity or Ticket from anywhere. |
+| Ask AI | Opens the Focus AI assistant panel on the right. The round **Ask AI** button at the bottom right of every page does the same. |
 | Moon / sun icon | Switches between light and dark mode. |
 | Bell | Your notifications: overdue tasks, tasks due today, High or Urgent tickets assigned to you, and events you have scheduled today. Click one to jump to it. **Mark all read** clears the red dot. |
 | Profile menu | Your avatar (top right) or name (bottom left): Settings, light/dark mode, Sign out. |
@@ -150,9 +156,10 @@ search and quick actions, and the page itself in the middle.
 This 10-minute tour follows one customer through the whole CRM. It is also a good demo script.
 Everything you change updates the Dashboard and Reports immediately.
 
-1. **Sign in and read the Dashboard.** Sign in with `mmitchell@hubspot.com` / `demo123`. Look at the
-   chips under the greeting (overdue, due today, scheduled) and the six numbers across the top.
-   Click any number card to open the page behind it.
+1. **Sign in and read the Dashboard.** Sign in with `mmitchell@hubspot.com` / `demo123`. The Dashboard
+   shows the whole business: all companies and the whole team. Look at the chips under the title
+   (overdue, due today, scheduled) and the six numbers across the top. Pick a company in the
+   **All companies** selector to see just that account, then switch back.
 2. **Find a customer.** Press `Ctrl K`, type **Lorelai**, press `Enter`. Her contact page opens with
    her details, company, deals, tickets and history.
 3. **Open her company.** Click **The Dragonfly Inn**. The strip under the company name shows how
@@ -173,6 +180,8 @@ Everything you change updates the Dashboard and Reports immediately.
    **Post**. Then click **Resolve ticket**. The open-ticket counts drop everywhere.
 10. **Check the results.** Open **Reports** and choose **All time**. Won revenue, win rate, deals by
     stage and sales by owner all reflect what you just did.
+11. **Ask the assistant.** Click **Ask AI** and try "What should the team focus on today?". The answer
+    links straight to the deals, companies and tickets it mentions.
 
 ---
 
@@ -182,15 +191,17 @@ Everything you change updates the Dashboard and Reports immediately.
 
 **Where:** Sidebar → Dashboard (the first page after sign-in)
 
-Your daily starting point. It answers: what needs my attention, how is the pipeline, and how are we doing?
+The overview of the whole business. It covers **all companies and the whole team**, not just the
+signed-in person, and answers: what needs attention, how is the pipeline, and how are we doing?
 
 | Section | What it shows | What you can do |
 |---|---|---|
-| Greeting chips | Your overdue tasks, tasks due today, and events scheduled today. | Click a chip to open Tasks or Calendar. |
+| Title and chips | "Business overview" (or the company's name when one is selected), with the team's overdue tasks, tasks due today and events scheduled today. | Click a chip to open Tasks or Calendar. |
+| All companies selector | Which companies the page covers. | Pick one company to limit every card, chart and list to it. Choose **All companies** to go back. New deals and activities created from here are linked to the selected company. |
 | Log activity · New deal | The two most common actions. | Opens the matching form. |
 | Six number cards | **Total Contacts**, **New Leads** (leads added in the last 30 days), **Active Deals** (open deals), **Pipeline Value** (open deal amounts), **Won Revenue** (won in the last 30 days), **Open Tickets**. Each shows the change against the 30 days before, plus a small trend line. | Click a card to open its page. |
 | Revenue Trend | Won revenue per month for the last 12 months, plus all-time won and this month. | Switch **Value** / **Deals** to see money or number of deals. Hover the line for exact figures. |
-| My Tasks | Your next open tasks, earliest first. Overdue ones are red. | Tick to complete, click a title to edit, **Add task** to create one. |
+| Upcoming Tasks | The team's next open tasks, earliest first, with each assignee's initials. Overdue ones are red. | Tick to complete, click a title to edit, **Add task** to create one. |
 | Sales Pipeline | Open deals per stage, as a coloured bar and as tiles with count and value. | Click a tile or **Open board** to go to the Pipeline. |
 | Deal Conversion | Win rate ring, won vs lost count, average deal size, average sales cycle, weighted pipeline. | Read only. See section 8 for definitions. |
 | Recent Deals | The latest deals with stage, amount and owner. | Click a row to open the deal panel. |
@@ -212,7 +223,9 @@ tasks, tickets and notes.
 
 - **Tabs** across the top filter by status: All, Leads, Prospects, Customers, Inactives. The number
   shows how many are in each.
-- **Search** by name, email, phone, company or job title. **All owners** narrows to one team member's contacts.
+- **Search** by name, email, phone, company or job title.
+- **All companies** filter shows only one company's contacts. **No company** lists contacts not linked to any company.
+- **All owners** narrows to one team member's contacts.
 - **Sort** by clicking a column heading. Click again to reverse, a third time to clear.
 - **Columns** (top right of the table) shows or hides columns such as Phone, Owner, Last Activity,
   Created or Source.
@@ -409,6 +422,36 @@ each figure is compared with the period just before it.
 - **Data sources**: one row per CSV file, showing how many rows it had, what new records it created,
   and anything that could not be linked.
 
+### 5.12 Focus AI assistant
+
+**Where:** **Ask AI** in the top bar, the round **Ask AI** button at the bottom right of every page,
+or search (`Ctrl K`) → **Ask Focus AI**.
+
+A chat assistant that answers questions using your live CRM data: companies, contacts, deals, tasks,
+tickets and recent activities.
+
+- **Ask in plain language**, for example:
+  - "What should the team focus on today?"
+  - "Which deals are past their close date?"
+  - "Tell me about Brightline Analytics"
+  - "Who has the most open deals?"
+  - "Draft a follow-up email for our biggest open deal"
+- **Suggested questions** appear when the panel is empty. Click one to ask it.
+- **Links in answers** open the record: companies, contacts and tickets open their page, and deals open
+  the deal panel.
+- **Enter** sends, **Shift+Enter** adds a new line, the **■** button stops an answer, and **↺** starts a
+  new conversation. **Esc** or **×** closes the panel.
+- The assistant reads your data but **does not change it**. When you ask it to create or update
+  something, it tells you where to do it.
+- Answers can be wrong, so check key figures before you rely on them.
+
+**Two modes**
+
+| Mode | When | What you get |
+|---|---|---|
+| Claude | An Anthropic API key is set on the server (see section 7) | Full answers to any question about your data, powered by Claude. |
+| Offline mode | No API key is set | Built-in answers for common questions: pipeline, revenue and win rate, overdue tasks, urgent tickets, biggest deals, and a summary of any company you name. The panel subtitle says "Offline mode". |
+
 ---
 
 ## 6. Creating and editing records
@@ -423,6 +466,12 @@ button or an **Edit** action.
   company and contact; changing the company clears a contact who works elsewhere.
 - **Deal stage sets probability**: choosing a stage fills in its standard probability. You can still type your own.
 - Forms opened from a contact, company, deal or calendar day arrive with those details already filled in.
+- **Company, Contact and Deal fields are searchable.** Click the field and type part of a name. Use the
+  arrow keys and `Enter`, or click. **×** clears the field.
+- **Create a company on the spot**: if the company you type doesn't exist, choose
+  **Create company "…"**. It's created and selected, and you can fill in its details later.
+- **No duplicate companies**: when adding a company, start typing its name. Existing companies with a
+  similar name or website appear under the field, so you can open the existing one instead.
 
 | Record | Required | Other fields |
 |---|---|---|
@@ -441,8 +490,16 @@ button or an **Edit** action.
 
 ## 7. Your data
 
-Focus CRM's records come from the CSV files in the project's `Data` folder, which are HubSpot sample
-import files. There is no made-up demo data.
+Focus CRM's records come from the CSV files in the project's `Data` folder:
+
+- **HubSpot sample files**: the original sample import files downloaded from HubSpot.
+- **Generated files** (names start with `Generated - `): extra sample data in the same HubSpot format so
+  the CRM has a realistic volume: 40 companies, about 125 contacts, about 100 deals over the last
+  12 months, 110 calls, 80 emails, 55 meetings, 45 notes, 70 tasks, 48 tickets and a 7-person team.
+
+Both kinds are imported together. To refresh the generated data (dates are set relative to the day
+you run it), run `npm run generate-data` in the project folder, then use **Re-import CSV data**.
+Deleting the `Generated - ` files and re-importing leaves only the original HubSpot data.
 
 1. **First load**: the app reads every `.csv` in `Data`, recognises each file by its column headings,
    and creates contacts, companies, deals, tickets, calls, emails, notes and tasks.
@@ -461,6 +518,7 @@ import files. There is no made-up demo data.
 | Clear all data | Settings → Data. Deletes every record but keeps the team. Re-import brings the data back. |
 | Data sources | Settings → Data sources. Shows what each file contributed and anything left unlinked, such as emails that point to HubSpot IDs not present in the files, or product lists (there is no Products page). |
 | Timeline | Every imported record's timeline starts with "… imported from <file name>", so you can always trace it back. |
+| Enable Focus AI | Copy `.env.local.example` to `.env.local`, put your Anthropic API key after `ANTHROPIC_API_KEY=`, and restart the app. |
 
 ### How HubSpot values are translated
 
@@ -529,7 +587,8 @@ import files. There is no made-up demo data.
 | `Ctrl K` / `⌘ K` | Open or close search |
 | `↑` `↓` then `Enter` | Move through search results and open one |
 | `Ctrl Enter` | Save the open form, or save a note / ticket reply |
-| `Esc` | Close a form, dialog, menu, search or the deal panel |
+| `Esc` | Close a form, dialog, menu, search, the deal panel or the assistant |
+| `Enter` / `Shift Enter` | In the assistant: send / new line |
 
 ---
 
@@ -559,6 +618,10 @@ Tap the card and use the stage bar in the deal panel.
 
 **Where did a record come from?**
 Open it and look at the bottom of its Timeline: "imported from <file>". Settings → Data sources lists every file.
+
+**Focus AI says "Offline mode"**
+No Anthropic API key is set on the server. Add one to `.env.local` (see section 7) and restart the app
+to get full answers.
 
 **Why does a deal show a different currency field?**
 Amounts are shown in the currency chosen in Settings. If the CSV had another currency, it's listed on

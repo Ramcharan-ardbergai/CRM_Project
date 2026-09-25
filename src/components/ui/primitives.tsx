@@ -176,6 +176,25 @@ export function Avatar({ name, color, size = 32, className }: { name: string; co
   );
 }
 
+/** A colorful, deterministic mark for a company without requiring uploaded assets. */
+export function CompanyAvatar({ name, size = 36, className }: { name: string; size?: number; className?: string }) {
+  const hue = [...name].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
+  return (
+    <span
+      title={name}
+      className={cn("inline-flex shrink-0 items-center justify-center rounded-xl font-bold text-white ring-2 ring-surface", className)}
+      style={{
+        width: size,
+        height: size,
+        fontSize: Math.max(10, size * 0.34),
+        background: `linear-gradient(135deg, hsl(${hue} 75% 58%), hsl(${(hue + 42) % 360} 72% 45%))`,
+      }}
+    >
+      {initials(name)}
+    </span>
+  );
+}
+
 export function IconTile({ icon: Icon, tone = "blue", size = "md" }: { icon: LucideIcon; tone?: Tone; size?: "sm" | "md" }) {
   return (
     <span className={cn(`tone-${tone}`, "inline-flex shrink-0 items-center justify-center", size === "md" ? "h-10 w-10 rounded-xl" : "h-8 w-8 rounded-lg")}>

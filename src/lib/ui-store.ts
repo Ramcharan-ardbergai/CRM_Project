@@ -32,6 +32,7 @@ interface UIState {
   dealPanelId: ID | null;
   searchOpen: boolean;
   mobileNavOpen: boolean;
+  assistantOpen: boolean;
   pushToast: (t: Omit<Toast, "id">) => void;
   dismissToast: (id: string) => void;
   setConfirm: (c: ConfirmRequest | null) => void;
@@ -40,6 +41,7 @@ interface UIState {
   openDeal: (id: ID | null) => void;
   setSearchOpen: (v: boolean) => void;
   setMobileNav: (v: boolean) => void;
+  setAssistantOpen: (v: boolean) => void;
 }
 
 export const useUI = create<UIState>()((set) => ({
@@ -49,6 +51,7 @@ export const useUI = create<UIState>()((set) => ({
   dealPanelId: null,
   searchOpen: false,
   mobileNavOpen: false,
+  assistantOpen: false,
   pushToast: (t) => {
     const id = uid("toast");
     set((s) => ({ toasts: [...s.toasts.slice(-3), { ...t, id }] }));
@@ -61,6 +64,7 @@ export const useUI = create<UIState>()((set) => ({
   openDeal: (dealPanelId) => set({ dealPanelId }),
   setSearchOpen: (searchOpen) => set({ searchOpen }),
   setMobileNav: (mobileNavOpen) => set({ mobileNavOpen }),
+  setAssistantOpen: (assistantOpen) => set({ assistantOpen }),
 }));
 
 export const toast = {

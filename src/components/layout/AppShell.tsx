@@ -5,6 +5,7 @@ import { useEffect, type ReactNode } from "react";
 import { useHydrated } from "@/lib/hooks";
 import { useCRM } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { AssistantButton, AssistantPanel } from "../assistant/Assistant";
 import { DealDrawer } from "../crm/DealDrawer";
 import { FormHost } from "../forms/FormHost";
 import { Skeleton } from "../ui/primitives";
@@ -54,6 +55,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       <FormHost />
       <DealDrawer />
       <CommandSearch />
+      <AssistantButton />
+      <AssistantPanel />
     </div>
   );
 }
