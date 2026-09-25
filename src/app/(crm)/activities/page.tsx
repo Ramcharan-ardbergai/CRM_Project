@@ -19,6 +19,7 @@ export default function ActivitiesPage() {
   const [status, setStatus] = useState<"all" | "planned" | "completed">("all");
   const [owner, setOwner] = useState("");
   const [q, setQ] = useState("");
+  const [upcomingLimit, setUpcomingLimit] = useState(PAGE);
   const [limit, setLimit] = useState(PAGE);
   const query = useDebounced(q).trim().toLowerCase();
 
@@ -36,6 +37,7 @@ export default function ActivitiesPage() {
   );
 
   const upcoming = useMemo(() => filtered.filter((a) => a.status === "planned").sort((a, b) => a.date.localeCompare(b.date)), [filtered]);
+  const visibleUpcoming = upcoming.slice(0, upcomingLimit);
   const history = useMemo(() => filtered.filter((a) => a.status === "completed").sort((a, b) => b.date.localeCompare(a.date)), [filtered]);
 
   const grouped = useMemo(() => {
@@ -49,7 +51,7 @@ export default function ActivitiesPage() {
     return groups;
   }, [history, limit]);
 
-  const today = data.activities.filter((a) => isSameDay(a.date, new Date())).sort((a, b) => a.date.localeCompare(b.date));
+  const today = filtered.filter((a) => isSameDay(a.date, new Date())).sort((a, b) => a.date.localeCompare(b.date));
   const weekAgo = startOfDay().getTime() - 6 * DAY;
   const weekCounts = ACTIVITY_TYPES.map((t) => ({
     ...t,
@@ -68,16 +70,28 @@ export default function ActivitiesPage() {
       <Tabs
         className="mb-4"
         value={type}
-        onChange={(v) => { setType(v); setLimit(PAGE); }}
+        onChange={(v) => { setType(v); setUpcomingLimit(PAGE); setLimit(PAGE); }}
         tabs={[
           { id: "all", label: "All", count: data.activities.length },
           ...ACTIVITY_TYPES.map((t) => ({ id: t.id, label: `${t.label}s`, count: data.activities.filter((a) => a.type === t.id).length })),
         ]}
       />
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+      <div className="mb-6 flex flex-wrap items-center gap-2">
+        <div className="relative w-full sm:w-72">
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-subtle" />
+          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search activities…" className="pl-9" />
+        </div>
+        <Select value={owner} onChange={(e) => setOwner(e.target.value)} className="w-auto">
+          <option value="">Everyone</option>
+          {data.users.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
+        </Select>
+        <Segmented className="ml-auto" value={status} onChange={setStatus} options={[{ id: "all", label: "All" }, { id: "planned", label: "Planned" }, { id: "completed", label: "Completed" }]} />
+      </div>
+
+      <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-12">
         <div className="space-y-6 xl:col-span-8">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="hidden">
             <div className="relative w-full sm:w-72">
               <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-subtle" />
               <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search activities…" className="pl-9" />
@@ -98,8 +112,13 @@ export default function ActivitiesPage() {
           {upcoming.length > 0 && (
             <Card>
               <CardHeader title="Upcoming" subtitle={`${upcoming.length} planned`} />
-              <div className="space-y-5 px-5 pb-5">
-                {upcoming.map((a) => <ActivityItem key={a.id} activity={a} />)}
+            <div className="divide-y divide-line px-5 pb-1">
+                {visibleUpcoming.map((a) => <div key={a.id} className="py-4 first:pt-0 last:pb-4"><ActivityItem activity={a} /></div>)}
+                {upcoming.length > upcomingLimit && (
+                  <Button className="my-4 w-full" onClick={() => setUpcomingLimit((l) => l + PAGE)}>
+                    Load more ({upcoming.length - upcomingLimit} remaining)
+                  </Button>
+                )}
               </div>
             </Card>
           )}
@@ -111,8 +130,8 @@ export default function ActivitiesPage() {
                 {grouped.map((g) => (
                   <div key={g.label} className="mb-6 last:mb-0">
                     <p className="mb-3 text-xs font-semibold tracking-wide text-subtle uppercase">{g.label}</p>
-                    <div className="relative space-y-5 before:absolute before:top-2 before:bottom-2 before:left-[15px] before:w-px before:bg-line">
-                      {g.items.map((a) => <div key={a.id} className="relative"><ActivityItem activity={a} /></div>)}
+                    <div className="divide-y divide-line">
+                      {g.items.map((a) => <div key={a.id} className="relative py-4 first:pt-0 last:pb-0"><ActivityItem activity={a} /></div>)}
                     </div>
                   </div>
                 ))}
@@ -131,14 +150,14 @@ export default function ActivitiesPage() {
               {today.length === 0 ? (
                 <EmptyState icon={CalendarClock} title="Nothing scheduled" className="py-6" />
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {today.map((a) => (
-                    <div key={a.id} className="flex items-center gap-3">
-                      <span className="w-16 text-xs font-medium text-muted">{formatTime(a.date)}</span>
-                      <ActivityIcon type={a.type} className="h-7 w-7" />
-                      <div className="min-w-0 flex-1">
-                        <p className={a.status === "completed" ? "truncate text-sm text-subtle line-through" : "truncate text-sm font-medium text-fg"}>{a.subject}</p>
-                        <p className="truncate text-xs text-muted">{lookup.companies.get(a.companyId ?? "")?.name}</p>
+                    <div key={a.id} className="grid min-h-12 grid-cols-[4.25rem_2rem_minmax(0,1fr)] items-start gap-3 rounded-lg px-1 py-2">
+                      <span className="pt-1 text-xs font-medium tabular-nums text-muted">{formatTime(a.date)}</span>
+                      <ActivityIcon type={a.type} className="mt-0.5 h-8 w-8" />
+                      <div className="min-w-0">
+                        <p className={a.status === "completed" ? "line-clamp-2 break-words text-sm leading-5 text-subtle line-through" : "line-clamp-2 break-words text-sm leading-5 font-medium text-fg"}>{a.subject}</p>
+                        <p className="truncate text-xs text-muted">{lookup.companies.get(a.companyId ?? "")?.name || "No company linked"}</p>
                       </div>
                     </div>
                   ))}
@@ -151,7 +170,7 @@ export default function ActivitiesPage() {
             <CardHeader title="Last 7 Days" subtitle="Completed activities by type" />
             <div className="space-y-3 px-5 pb-5">
               {weekCounts.map((w) => (
-                <div key={w.id} className="flex items-center gap-3">
+                <div key={w.id} className="grid grid-cols-[2rem_5rem_minmax(0,1fr)_1.5rem] items-center gap-3">
                   <ActivityIcon type={w.id} className="h-7 w-7" />
                   <span className="w-20 text-sm text-fg-2">{w.label}</span>
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-3">

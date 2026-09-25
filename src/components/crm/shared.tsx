@@ -163,10 +163,10 @@ export function ActivityItem({ activity, showRelations = true }: { activity: Act
   const deal = activity.dealId ? lookup.deals.get(activity.dealId) : undefined;
   const owner = lookup.users.get(activity.ownerId);
   return (
-    <div className="group flex gap-3">
+    <div className="group grid grid-cols-[2rem_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2">
       <ActivityIcon type={activity.type} />
-      <div className="min-w-0 flex-1">
-        <div className="flex items-start justify-between gap-2">
+      <div className="min-w-0 pt-0.5">
+        <div className="min-w-0">
           <div className="min-w-0">
             <p className="text-sm font-medium text-fg">{activity.subject}</p>
             {showRelations && (contact || company || deal) && (
@@ -175,31 +175,22 @@ export function ActivityItem({ activity, showRelations = true }: { activity: Act
               </p>
             )}
           </div>
-          <div className="flex shrink-0 items-center gap-1">
-            {activity.status === "planned" ? (
-              <Button
-                size="sm"
-                variant="soft"
-                icon={Check}
-                className="h-7"
-                onClick={() => {
-                  update("activities", activity.id, { status: "completed" });
-                  toast.success("Activity marked as done");
-                }}
-              >
-                Done
-              </Button>
-            ) : null}
-            <RowActions kind="activity" id={activity.id} name={activity.subject} />
-          </div>
         </div>
         {activity.description && <p className="mt-1 line-clamp-2 text-[13px] text-fg-2">{activity.description}</p>}
-        <p className="mt-1.5 flex items-center gap-1.5 text-xs text-subtle">
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-subtle">
           <CalendarClock className="h-3 w-3" />
           {formatDateTime(activity.date)}
           {owner && <> · {owner.name}</>}
           {activity.status === "planned" && <Badge tone="amber" className="ml-1 py-0">Planned</Badge>}
         </p>
+      </div>
+      <div className="flex shrink-0 items-center gap-1">
+        {activity.status === "planned" ? (
+          <Button size="sm" variant="soft" icon={Check} className="h-7" onClick={() => { update("activities", activity.id, { status: "completed" }); toast.success("Activity marked as done"); }}>
+            Done
+          </Button>
+        ) : null}
+        <RowActions kind="activity" id={activity.id} name={activity.subject} />
       </div>
     </div>
   );
