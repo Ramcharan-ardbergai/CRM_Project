@@ -25,7 +25,7 @@ export interface NavItem {
  * Non-CRM modules (eCommerce, HR, Finance, Academy…) are intentionally left out.
  */
 export const NAV: { section: string; items: NavItem[] }[] = [
-  { section: "Overview", items: [{ href: "/", label: "Dashboard", icon: LayoutDashboard }] },
+  { section: "Overview", items: [{ href: "/dashboard", label: "Dashboard", icon: LayoutDashboard }] },
   {
     section: "CRM",
     items: [
@@ -48,4 +48,4 @@ export const NAV: { section: string; items: NavItem[] }[] = [
   { section: "Workspace", items: [{ href: "/settings", label: "Settings", icon: Settings }] },
 ];
 
-export const isActive = (pathname: string, href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+export const isActive = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
