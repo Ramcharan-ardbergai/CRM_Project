@@ -71,7 +71,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: Inter, "SF Pro Text", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -134,3 +134,143 @@
 .text-tone-amber { color: var(--amber); }
 
 .recharts-wrapper *:focus { outline: none; }
+
+/* ---------- Public product experience ---------- */
+.marketing-page { color-scheme: light; }
+.brand-mark {
+  background: linear-gradient(145deg, #6475ff 0%, #4054e8 48%, #2938bb 100%);
+  box-shadow: 0 8px 20px -8px rgba(64, 84, 232, 0.8), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.marketing-primary-button {
+  background: linear-gradient(135deg, #5367f1 0%, #4054e8 55%, #3343cb 100%);
+  box-shadow: 0 10px 24px -10px rgba(64, 84, 232, .7), inset 0 1px 0 rgba(255,255,255,.24);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.marketing-primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -12px rgba(64, 84, 232, .72), inset 0 1px 0 rgba(255,255,255,.24);
+  filter: saturate(1.08);
+}
+.marketing-primary-button:active { transform: translateY(0) scale(.985); }
+.marketing-primary-button:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(64,84,232,.2), 0 14px 28px -12px rgba(64,84,232,.7); }
+
+.hero-enter { opacity: 0; animation: marketing-enter .72s cubic-bezier(.2,.8,.2,1) forwards; }
+.hero-enter-1 { animation-delay: .04s; }
+.hero-enter-2 { animation-delay: .12s; }
+.hero-enter-3 { animation-delay: .2s; }
+.hero-enter-4 { animation-delay: .28s; }
+.hero-enter-5 { animation-delay: .36s; }
+.hero-enter-6 { animation-delay: .42s; }
+@keyframes marketing-enter { from { opacity: 0; transform: translateY(18px); filter: blur(7px); } to { opacity: 1; transform: none; filter: none; } }
+
+.section-kicker { font-size: 12px; line-height: 1; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #4054e8; }
+.product-stage { perspective: 1600px; }
+.product-glow {
+  position: absolute; inset: 8% 7% -8%; border-radius: 40%;
+  background: radial-gradient(circle at 50% 35%, rgba(64,84,232,.3), rgba(124,92,240,.12) 45%, transparent 74%);
+  filter: blur(42px); opacity: .65;
+}
+.product-window {
+  transform: rotateX(2.2deg) rotateY(-.5deg);
+  transform-origin: 50% 100%;
+  animation: product-settle 1s cubic-bezier(.2,.85,.25,1) both;
+}
+@keyframes product-settle { from { transform: rotateX(8deg) translateY(28px) scale(.97); opacity: 0; } to { transform: rotateX(2.2deg) rotateY(-.5deg); opacity: 1; } }
+.floating-insight { position: absolute; z-index: 2; }
+.floating-insight-left { left: -3%; bottom: 15%; }
+.floating-insight-right { right: -3%; top: 23%; }
+.chart-line { stroke-dasharray: 700; stroke-dashoffset: 700; animation: chart-draw 1.4s .8s cubic-bezier(.2,.8,.2,1) forwards; }
+.chart-area { opacity: 0; animation: fade-in .7s 1.35s ease forwards; }
+@keyframes chart-draw { to { stroke-dashoffset: 0; } }
+
+.pipeline-demo-card { opacity: 0; animation: pipeline-card-in .5s .18s cubic-bezier(.2,.8,.2,1) forwards; transition: transform .18s ease, border-color .18s ease; }
+.pipeline-demo-card:hover { transform: translateY(-3px); border-color: rgba(145,160,255,.45); }
+@keyframes pipeline-card-in { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+.signal-story { scrollbar-width: thin; scrollbar-color: #d6d4cb transparent; }
+.signal-line { position: absolute; top: 22px; right: 6%; left: 6%; height: 1px; background: #d8d6ce; }
+.signal-step { opacity: 0; animation: signal-step-in .55s ease forwards; }
+@keyframes signal-step-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.customer-scene::before {
+  content: "";
+  position: absolute;
+  top: 12%;
+  right: -10%;
+  bottom: -9%;
+  left: 12%;
+  z-index: -1;
+  border: 1px solid #e4e6ed;
+  background: #f7f8fb;
+  transform: rotate(2.5deg);
+}
+.customer-scene-label {
+  position: absolute;
+  z-index: 3;
+  top: -16px;
+  right: 26px;
+  border: 1px solid #dfe3ff;
+  border-radius: 999px;
+  background: white;
+  padding: 6px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #4054e8;
+  box-shadow: 0 8px 24px -16px rgba(30,40,90,.35);
+}
+.workday-timeline::before { content: ""; position: absolute; top: 30px; bottom: 30px; left: 79px; width: 1px; background: #e2e5ec; }
+
+/* Authentication visualization responds quietly to the active field. */
+.auth-visual .product-window { transition: transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease, filter .4s ease; }
+.auth-visual-success .product-window { transform: translateY(-7px) scale(1.012); filter: saturate(1.08); }
+.auth-visual-success::after {
+  content: "Workspace ready";
+  position: absolute;
+  z-index: 5;
+  right: 8%;
+  top: 12%;
+  border: 1px solid rgba(134,239,172,.22);
+  border-radius: 999px;
+  background: rgba(22,101,52,.9);
+  padding: 7px 11px;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  animation: pop-in .25s ease-out;
+}
+.auth-enter { opacity: 0; animation: auth-enter .55s cubic-bezier(.2,.8,.2,1) forwards; }
+.auth-enter-1 { animation-delay: .04s; }
+.auth-enter-2 { animation-delay: .12s; }
+.auth-enter-3 { animation-delay: .2s; }
+@keyframes auth-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.login-mobile-visual { transform: perspective(1000px) rotateX(1.5deg); transform-origin: 50% 100%; }
+
+@supports (animation-timeline: view()) {
+  .section-reveal {
+    animation-name: marketing-reveal;
+    animation-duration: 1ms;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 4% entry 26%;
+  }
+  @keyframes marketing-reveal { from { opacity: .18; transform: translateY(14px) scale(.995); } to { opacity: 1; transform: none; } }
+}
+
+@media (max-width: 640px) {
+  .product-window { transform: none; }
+  .customer-scene::before { display: none; }
+  .workday-timeline::before { left: 79px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  .marketing-page *, .marketing-page *::before, .marketing-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .product-window, .marketing-primary-button:hover { transform: none !important; }
+}

@@ -68,7 +68,7 @@ export function Sidebar() {
         )}
       >
         <div className={cn("flex h-16 items-center", collapsed ? "justify-center" : "justify-between px-5")}>
-          <Link href="/" aria-label="Focus CRM home">
+          <Link href="/dashboard" aria-label="Focus CRM dashboard">
             <Logo collapsed={collapsed} />
           </Link>
           <button className="rounded-md p-1 text-muted hover:bg-surface-2 lg:hidden" onClick={() => setMobileNav(false)} aria-label="Close menu">

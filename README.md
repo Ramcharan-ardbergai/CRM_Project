@@ -9,6 +9,8 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
+The public product website is at `/`, sign-in is at `/login`, and the authenticated CRM dashboard is at `/dashboard`.
+
 On first load the app imports every CSV in `Data/` (HubSpot sample import files).
 Sign in with a user found in the data (password `demo123`), e.g. `mmitchell@hubspot.com`.
 

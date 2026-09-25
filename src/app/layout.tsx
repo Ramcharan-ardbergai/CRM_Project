@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "Focus CRM",
@@ -11,11 +8,11 @@ export const metadata: Metadata = {
 };
 
 // Apply the saved theme before first paint to avoid a flash.
-const themeScript = `try{var s=JSON.parse(localStorage.getItem("focus-crm-v2")||"{}");if(s.state&&s.state.settings&&s.state.settings.theme==="dark")document.documentElement.classList.add("dark")}catch(e){}`;
+const themeScript = `try{var p=location.pathname;if(p!=="/"&&p!=="/login"){var s=JSON.parse(localStorage.getItem("focus-crm-v2")||"{}");if(s.state&&s.state.settings&&s.state.settings.theme==="dark")document.documentElement.classList.add("dark")}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

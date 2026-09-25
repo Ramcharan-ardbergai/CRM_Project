@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, FileSpreadsheet } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/primitives";
 import { ConfirmHost, Toaster } from "@/components/ui/overlay";
@@ -8,6 +9,9 @@ import { useHydrated } from "@/lib/hooks";
 import { useCRM } from "@/lib/store";
 
 export function Providers({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const isMarketing = pathname === "/";
+  const isPublicExperience = isMarketing || pathname === "/login";
   const theme = useCRM((s) => s.settings.theme);
   const importedAt = useCRM((s) => s.importedAt);
   const importFromCSV = useCRM((s) => s.importFromCSV);
@@ -17,8 +21,8 @@ export function Providers({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Wait for persisted settings so we don't override the pre-paint theme.
-    if (hydrated) document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme, hydrated]);
+    if (hydrated) document.documentElement.classList.toggle("dark", !isPublicExperience && theme === "dark");
+  }, [theme, hydrated, isPublicExperience]);
 
   const runImport = useCallback(() => {
     setError("");
@@ -27,14 +31,14 @@ export function Providers({ children }: { children: ReactNode }) {
 
   // First visit: load the dataset from the CSV files in /Data.
   useEffect(() => {
-    if (hydrated && !importedAt && !started.current) {
+    if (hydrated && !isMarketing && !importedAt && !started.current) {
       started.current = true;
       runImport();
     }
-  }, [hydrated, importedAt, runImport]);
+  }, [hydrated, importedAt, isMarketing, runImport]);
 
   let content = children;
-  if (hydrated && !importedAt) {
+  if (!isMarketing && hydrated && !importedAt) {
     content = (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
         {error ? (
