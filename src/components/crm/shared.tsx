@@ -3,6 +3,7 @@
 import {
   CalendarClock,
   Check,
+  CheckCircle2,
   FileText,
   GitCommitHorizontal,
   Mail,
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { ACTIVITY_MAP, CONTACT_STATUS_TONE, PRIORITY_TONE, STAGE_MAP, TICKET_STATUS_TONE } from "@/lib/constants";
 import { contactName, useLookup } from "@/lib/hooks";
 import { useCRM, type CollectionKey } from "@/lib/store";
@@ -124,6 +126,7 @@ export function dueState(task: Task) {
 export function TaskRow({ task, showAssignee = true, compact }: { task: Task; showAssignee?: boolean; compact?: boolean }) {
   const toggleTask = useCRM((s) => s.toggleTask);
   const lookup = useLookup();
+  const router = useRouter();
   const state = dueState(task);
   const related = task.dealId ? lookup.deals.get(task.dealId)?.name : task.companyId ? lookup.companies.get(task.companyId)?.name : null;
   return (
@@ -137,8 +140,18 @@ export function TaskRow({ task, showAssignee = true, compact }: { task: Task; sh
         }}
         className="rounded-full"
       />
-      <button className="min-w-0 flex-1 text-left" onClick={() => openForm("task", { id: task.id })}>
-        <p className={cn("truncate text-sm font-medium", task.status === "done" ? "text-subtle line-through" : "text-fg")}>{task.title}</p>
+      <button
+        className="min-w-0 flex-1 text-left"
+        onClick={() => {
+          const action = /^call\b/i.test(task.title) ? "call" : /^e-?mail\b/i.test(task.title) ? "email" : /schedule|follow.?up/i.test(task.title) ? "task" : null;
+          if (task.contactId && action) router.push(`/contacts/${task.contactId}?action=${action}`);
+          else openForm("task", { id: task.id });
+        }}
+      >
+        <p className={cn("flex items-center gap-1.5 truncate text-sm font-medium", task.status === "done" ? "text-muted" : "text-fg")}>
+          {task.status === "done" && <CheckCircle2 className="h-4 w-4 shrink-0 text-tone-green" />}
+          <span className="truncate">{task.title}</span>
+        </p>
         <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-muted">
           <span className={cn(state === "overdue" && "font-medium text-tone-red", state === "today" && "font-medium text-tone-amber")}>
             {state === "overdue" ? `Overdue · ${dayLabel(task.dueDate)}` : dayLabel(task.dueDate)}
@@ -175,7 +188,7 @@ export function ActivityItem({ activity, showRelations = true }: { activity: Act
               </p>
             )}
           </div>
-          <div className="flex shrink-0 items-center gap-1">
+      <div className="flex shrink-0 self-end items-center gap-1 pb-0.5">
             {activity.status === "planned" ? (
               <Button
                 size="sm"
@@ -198,6 +211,7 @@ export function ActivityItem({ activity, showRelations = true }: { activity: Act
           <CalendarClock className="h-3 w-3" />
           {formatDateTime(activity.date)}
           {owner && <> · {owner.name}</>}
+          {activity.status === "completed" && <span className="ml-1 inline-flex items-center gap-1 text-tone-green"><CheckCircle2 className="h-3.5 w-3.5" /> Completed</span>}
           {activity.status === "planned" && <Badge tone="amber" className="ml-1 py-0">Planned</Badge>}
         </p>
       </div>

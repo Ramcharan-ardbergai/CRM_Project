@@ -20,6 +20,9 @@ import { toast, useUI } from "@/lib/ui-store";
 import { DAY, fromDateInput, toDateInput, toDateTimeInput } from "@/lib/utils";
 import { Modal } from "../ui/overlay";
 import { Button, Field, Input, Segmented, Select, Textarea } from "../ui/primitives";
+import { SearchSelect, type SearchOption } from "../ui/SearchSelect";
+import Link from "next/link";
+import { Building2 } from "lucide-react";
 
 type Values = Record<string, string>;
 type Errors = Record<string, string>;
@@ -185,31 +188,59 @@ function EntityForm({ kind, id, defaults, onClose }: { kind: EntityKind; id?: st
       <Input value={values[k] ?? ""} onChange={(e) => set(k, e.target.value)} invalid={!!errors[k]} {...p} />
     </Field>
   );
-  const select = (k: string, label: string, options: { value: string; label: string }[], empty?: string) => (
-    <Field label={label} error={errors[k]}>
-      <Select value={values[k] ?? ""} onChange={(e) => set(k, e.target.value)}>
-        {empty !== undefined && <option value="">{empty}</option>}
-        {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-      </Select>
-    </Field>
+  const select = (k: string, label: string, options: { value: string; label: string }[], empty?: string) => {
+    const v = values[k] ?? "";
+    // Keep imported values that aren't in the standard list.
+    const all = v && !options.some((o) => o.value === v) ? [{ value: v, label: v }, ...options] : options;
+    return (
+      <Field label={label} error={errors[k]}>
+        <Select value={v} onChange={(e) => set(k, e.target.value)}>
+          {empty !== undefined && <option value="">{empty}</option>}
+          {!v && empty === undefined && <option value="">Select…</option>}
+          {all.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </Select>
+      </Field>
+    );
+  };
+  /** Searchable picker for related records. */
+  const search = (k: string, label: string, options: SearchOption[], empty: string, onCreate?: (text: string) => string, createLabel?: string) => (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={`f-${k}`} className="text-[13px] font-medium text-fg-2">{label}</label>
+      <SearchSelect id={`f-${k}`} value={values[k] ?? ""} onChange={(v) => set(k, v)} options={options} emptyLabel={empty} onCreate={onCreate} createLabel={createLabel} />
+    </div>
   );
+  const createCompany = (name: string) => {
+    const co = state.add("companies", { name, industry: "", website: "", phone: "", city: "", country: "", employees: "", ownerId: me });
+    toast.success("Company created", name);
+    return co.id;
+  };
   const opts = (xs: readonly string[]) => xs.map((x) => ({ value: x, label: x }));
   const users = (filter?: (r: string) => boolean) => state.users.filter((u) => !filter || filter(u.role)).map((u) => ({ value: u.id, label: u.name }));
-  const companies = [...state.companies].sort((a, b) => a.name.localeCompare(b.name)).map((c) => ({ value: c.id, label: c.name }));
+  const companyName = new Map(state.companies.map((c) => [c.id, c.name]));
+  const companies = [...state.companies]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((c) => ({ value: c.id, label: c.name, hint: [c.industry, c.city].filter(Boolean).join(" · ") }));
   const contacts = state.contacts
     .filter((c) => !values.companyId || c.companyId === values.companyId)
-    .map((c) => ({ value: c.id, label: contactName(c) }));
+    .map((c) => ({ value: c.id, label: contactName(c), hint: [c.email, companyName.get(c.companyId ?? "")].filter(Boolean).join(" · ") }));
   const deals = state.deals
     .filter((d) => !values.companyId || d.companyId === values.companyId)
-    .map((d) => ({ value: d.id, label: d.name }));
+    .map((d) => ({ value: d.id, label: d.name, hint: companyName.get(d.companyId ?? "") }));
 
   const relations = (withDeal: boolean) => (
     <>
-      {select("companyId", "Company", companies, "No company")}
-      {select("contactId", "Contact", contacts, "No contact")}
-      {withDeal && select("dealId", "Deal", deals, "No deal")}
+      {search("companyId", "Company", companies, "No company", createCompany, "Create company")}
+      {search("contactId", "Contact", contacts, "No contact")}
+      {withDeal && search("dealId", "Deal", deals, "No deal")}
     </>
   );
+
+  // While naming a new company, show existing ones with a similar name.
+  const nameQuery = kind === "company" ? (values.name ?? "").trim().toLowerCase() : "";
+  const similar =
+    nameQuery.length >= 2
+      ? state.companies.filter((c) => c.id !== existing?.id && (c.name.toLowerCase().includes(nameQuery) || c.website.toLowerCase().includes(nameQuery))).slice(0, 4)
+      : [];
 
   let body: React.ReactNode;
   switch (kind) {
@@ -221,7 +252,7 @@ function EntityForm({ kind, id, defaults, onClose }: { kind: EntityKind; id?: st
           {text("email", "Email", { type: "email", placeholder: "amit@company.com" }, true)}
           {text("phone", "Phone", { placeholder: "+91 98765 43210" })}
           {text("title", "Job title", { placeholder: "Head of Procurement" })}
-          {select("companyId", "Company", companies, "No company")}
+          {search("companyId", "Company", companies, "No company", createCompany, "Create company")}
           {select("status", "Status", opts(CONTACT_STATUSES))}
           {select("source", "Lead source", opts(LEAD_SOURCES))}
           {select("ownerId", "Owner", users())}
@@ -231,7 +262,21 @@ function EntityForm({ kind, id, defaults, onClose }: { kind: EntityKind; id?: st
     case "company":
       body = (
         <>
-          <div className="sm:col-span-2">{text("name", "Company name", { autoFocus: true, placeholder: "ABC Solutions" }, true)}</div>
+          <div className="flex flex-col gap-2 sm:col-span-2">
+            {text("name", "Company name", { autoFocus: true, placeholder: "Start typing to check existing companies…" }, true)}
+            {similar.length > 0 && (
+              <div className="rounded-lg border border-line bg-surface-2/60 p-2 text-[13px]">
+                <p className="px-1 pb-1 text-xs font-medium text-muted">Already in your CRM</p>
+                {similar.map((c) => (
+                  <Link key={c.id} href={`/companies/${c.id}`} onClick={onClose} className="flex items-center gap-2 rounded-md px-1.5 py-1 text-fg-2 hover:bg-surface hover:text-primary">
+                    <Building2 className="h-3.5 w-3.5 text-subtle" />
+                    <span className="font-medium">{c.name}</span>
+                    <span className="truncate text-xs text-muted">{[c.website, c.city].filter(Boolean).join(" · ")}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
           {select("industry", "Industry", opts(INDUSTRIES))}
           {select("employees", "Employees", opts(EMPLOYEE_RANGES))}
           {text("website", "Website", { placeholder: "www.company.com" })}

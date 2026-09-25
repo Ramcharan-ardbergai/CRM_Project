@@ -1,0 +1,71 @@
+Task id,Task title,Notes,Due date,Priority,Task status,Task type,Assigned to,Email,Deal name
+TASK-1,Prepare quote for Helios Energy Partners,Keep Zoe warm.,9/17/2026 13:30,Medium,Completed,To-do,daniel.okafor@focuscrm.demo,zoe.vasquez@heliosenergypartners.com,
+TASK-2,Review requirements from Sterling Wealth Advisors,Related to Sterling Training Workshop.,9/17/2026 12:15,High,Completed,To-do,daniel.okafor@focuscrm.demo,oscar.xu@sterlingwealthadvisors.com,Sterling Training Workshop
+TASK-3,Book QBR with Waverly Fashion Group,Related to Waverly Annual Subscription.,10/10/2026 15:15,Low,In progress,Call,sofia.martinez@focuscrm.demo,amelia.walsh@waverlyfashiongroup.com,Waverly Annual Subscription
+TASK-4,Follow up with Windmill Data Co.,Related to Windmill Managed Services.,10/16/2026 13:00,Medium,In progress,Call,aisha.khan@focuscrm.demo,leila.kim@windmilldataco.com,Windmill Managed Services
+TASK-5,Follow up with Redfern Coffee Roasters,Related to Redfern Integration Project.,9/23/2026 10:15,Low,In progress,Call,sofia.martinez@focuscrm.demo,nora.vasquez@redferncoffeeroasters.com,Redfern Integration Project
+TASK-6,Prepare quote for Lumen Solar Systems,Keep Isla warm.,9/30/2026 13:00,High,Not started,To-do,ravi.menon@focuscrm.demo,isla.xu@lumensolarsystems.com,
+TASK-7,Book QBR with Bluewater Insurance,Related to Bluewater Platform Upgrade.,9/20/2026 17:15,Low,Completed,Call,sofia.martinez@focuscrm.demo,henry.evans@bluewaterinsurance.com,Bluewater Platform Upgrade
+TASK-8,Book QBR with Evergreen Dental Group,Related to Evergreen Security Audit (2).,10/10/2026 16:30,High,In progress,Call,daniel.okafor@focuscrm.demo,lucia.dubois@evergreendentalgroup.com,Evergreen Security Audit (2)
+TASK-9,Prepare quote for Thornbury Architects,Related to Thornbury Mobile App.,10/10/2026 09:00,Low,In progress,To-do,daniel.okafor@focuscrm.demo,ananya.rivera@thornburyarchitects.com,Thornbury Mobile App
+TASK-10,Send invoice to Evergreen Dental Group,Keep Maya warm.,9/15/2026 14:15,Medium,Not started,Email,daniel.okafor@focuscrm.demo,maya.vasquez@evergreendentalgroup.com,
+TASK-11,Review requirements from Sakura Design Studio,Related to Sakura Annual Subscription.,9/15/2026 17:45,Medium,Completed,To-do,ravi.menon@focuscrm.demo,freya.wright@sakuradesignstudio.com,Sakura Annual Subscription
+TASK-12,Review requirements from Northpeak Outdoor Co.,Related to Northpeak Support Retainer.,10/12/2026 16:15,Medium,Not started,To-do,daniel.okafor@focuscrm.demo,emma.anderson@northpeakoutdoorco.com,Northpeak Support Retainer
+TASK-13,Follow up with Orbit Telecom,Related to Orbit Website Rebuild.,10/9/2026 16:30,High,Not started,Call,sofia.martinez@focuscrm.demo,fatima.bennett@orbittelecom.com,Orbit Website Rebuild
+TASK-14,Prepare quote for Aurora Biotech,Keep Hannah warm.,10/6/2026 09:15,Medium,In progress,To-do,aisha.khan@focuscrm.demo,hannah.quinn@aurorabiotech.com,
+TASK-15,Send invoice to Sakura Design Studio,Related to Sakura Enterprise License.,10/5/2026 10:00,Medium,Not started,Email,ravi.menon@focuscrm.demo,ananya.hansen@sakuradesignstudio.com,Sakura Enterprise License
+TASK-16,Send invoice to Ironwood Construction,Related to Ironwood Enterprise License (2).,9/14/2026 14:45,Medium,Completed,Email,sofia.martinez@focuscrm.demo,maya.johnson@ironwoodconstruction.com,Ironwood Enterprise License (2)
+TASK-17,Review requirements from Waverly Fashion Group,Related to Waverly Annual Subscription.,9/13/2026 09:00,High,Completed,To-do,sofia.martinez@focuscrm.demo,amelia.walsh@waverlyfashiongroup.com,Waverly Annual Subscription
+TASK-18,Share contract with Aurora Biotech,Related to Aurora Security Audit.,9/24/2026 15:00,Low,Not started,Email,aisha.khan@focuscrm.demo,hannah.quinn@aurorabiotech.com,Aurora Security Audit
+TASK-19,Review requirements from Saffron Hospitality,Keep Caleb warm.,10/11/2026 17:00,Medium,Not started,To-do,ravi.menon@focuscrm.demo,caleb.patel@saffronhospitality.com,
+TASK-20,Send invoice to Windmill Data Co.,Related to Windmill Hardware Refresh.,9/30/2026 09:15,Medium,Not started,Email,aisha.khan@focuscrm.demo,leila.kim@windmilldataco.com,Windmill Hardware Refresh
+TASK-21,Send invoice to Summit Legal Partners,Keep Lucas warm.,10/10/2026 12:00,Medium,In progress,Email,sofia.martinez@focuscrm.demo,lucas.patel@summitlegalpartners.com,
+TASK-22,Send invoice to Redfern Coffee Roasters,Related to Redfern Integration Project.,9/27/2026 16:15,High,In progress,Email,mmitchell@hubspot.com,nora.vasquez@redferncoffeeroasters.com,Redfern Integration Project
+TASK-23,Review requirements from Summit Legal Partners,Related to Summit Security Audit.,9/26/2026 15:15,Medium,Not started,To-do,daniel.okafor@focuscrm.demo,lucas.patel@summitlegalpartners.com,Summit Security Audit
+TASK-24,Follow up with Atlas Manufacturing,Related to Atlas Analytics Add-on.,9/25/2026 09:15,Low,Not started,Call,sofia.martinez@focuscrm.demo,james.shah@atlasmanufacturing.com,Atlas Analytics Add-on
+TASK-25,Follow up with Aurora Biotech,Keep Arjun warm.,9/18/2026 15:00,Low,Completed,Call,ravi.menon@focuscrm.demo,arjun.iyer@aurorabiotech.com,
+TASK-26,Schedule demo with Ironwood Construction,Related to Ironwood Enterprise License (2).,9/28/2026 12:00,Medium,Not started,Call,sofia.martinez@focuscrm.demo,maya.johnson@ironwoodconstruction.com,Ironwood Enterprise License (2)
+TASK-27,Follow up with Waverly Fashion Group,Related to Waverly Annual Subscription.,9/28/2026 11:30,High,Not started,Call,sofia.martinez@focuscrm.demo,amelia.walsh@waverlyfashiongroup.com,Waverly Annual Subscription
+TASK-28,Prepare quote for Pinecrest Academy,Keep Logan warm.,9/28/2026 17:00,Low,Not started,To-do,aisha.khan@focuscrm.demo,logan.dubois@pinecrestacademy.com,
+TASK-29,Prepare quote for Evergreen Dental Group,Keep Liam warm.,9/14/2026 11:30,Low,Completed,To-do,ravi.menon@focuscrm.demo,liam.rao@evergreendentalgroup.com,
+TASK-30,Review requirements from Maple Street Bakery,Related to Maple Expansion Seats.,10/4/2026 15:15,Medium,Not started,To-do,mmitchell@hubspot.com,kenji.fischer@maplestreetbakery.com,Maple Expansion Seats
+TASK-31,Schedule demo with Silverleaf Hotels,Related to Silverleaf Training Workshop.,10/10/2026 12:30,Medium,Not started,Call,mmitchell@hubspot.com,zoe.lopez@silverleafhotels.com,Silverleaf Training Workshop
+TASK-32,Review requirements from Meridian Freight Lines,Keep Liam warm.,9/14/2026 14:15,Low,Completed,To-do,ravi.menon@focuscrm.demo,liam.bennett@meridianfreightlines.com,
+TASK-33,Prepare quote for Lumen Solar Systems,Keep Arjun warm.,9/23/2026 10:15,Low,In progress,To-do,aisha.khan@focuscrm.demo,arjun.bennett@lumensolarsystems.com,
+TASK-34,Schedule demo with Sterling Wealth Advisors,Keep Olivia warm.,9/20/2026 14:15,Medium,Completed,Call,daniel.okafor@focuscrm.demo,olivia.anderson@sterlingwealthadvisors.com,
+TASK-35,Review requirements from Pioneer Agritech,Related to Pioneer Platform Upgrade.,9/20/2026 10:30,High,Not started,To-do,daniel.okafor@focuscrm.demo,grace.thompson@pioneeragritech.com,Pioneer Platform Upgrade
+TASK-36,Schedule demo with Sakura Design Studio,Related to Sakura Managed Services.,10/15/2026 16:45,Low,Not started,Call,ravi.menon@focuscrm.demo,ananya.hansen@sakuradesignstudio.com,Sakura Managed Services
+TASK-37,Share contract with Pioneer Agritech,Related to Pioneer Annual Subscription.,9/20/2026 10:15,Medium,Not started,Email,mmitchell@hubspot.com,james.quinn@pioneeragritech.com,Pioneer Annual Subscription
+TASK-38,Send proposal to Meridian Freight Lines,Keep Liam warm.,10/14/2026 15:45,Medium,Not started,Email,ravi.menon@focuscrm.demo,liam.bennett@meridianfreightlines.com,
+TASK-39,Book QBR with Bluewater Insurance,Keep Nora warm.,9/27/2026 17:15,Low,Not started,Call,ravi.menon@focuscrm.demo,nora.foster@bluewaterinsurance.com,
+TASK-40,Review requirements from Kestrel Aerospace,Related to Kestrel Hardware Refresh.,9/19/2026 10:45,Medium,In progress,To-do,daniel.okafor@focuscrm.demo,amelia.underwood@kestrelaerospace.com,Kestrel Hardware Refresh
+TASK-41,Share contract with Atlas Manufacturing,Related to Atlas Analytics Add-on.,9/26/2026 16:00,Low,Not started,Email,daniel.okafor@focuscrm.demo,james.shah@atlasmanufacturing.com,Atlas Analytics Add-on
+TASK-42,Prepare quote for Waverly Fashion Group,Keep Benjamin warm.,9/26/2026 16:15,Medium,Completed,To-do,sofia.martinez@focuscrm.demo,benjamin.fischer@waverlyfashiongroup.com,
+TASK-43,Send proposal to Sterling Wealth Advisors,Related to Sterling Training Workshop.,10/14/2026 16:15,Medium,Not started,Email,daniel.okafor@focuscrm.demo,oscar.xu@sterlingwealthadvisors.com,Sterling Training Workshop
+TASK-44,Prepare quote for Ironwood Construction,Related to Ironwood Website Rebuild.,9/29/2026 09:00,Medium,Not started,To-do,sofia.martinez@focuscrm.demo,emma.dubois@ironwoodconstruction.com,Ironwood Website Rebuild
+TASK-45,Schedule demo with Quantum Ridge Labs,Related to Quantum Onboarding Package.,9/29/2026 17:15,Medium,Not started,Call,mmitchell@hubspot.com,lucia.owens@quantumridgelabs.com,Quantum Onboarding Package
+TASK-46,Review requirements from Tidewater Marine Supply,Related to Tidewater Hardware Refresh.,9/18/2026 15:00,Low,Not started,To-do,aisha.khan@focuscrm.demo,kenji.lopez@tidewatermarinesupply.com,Tidewater Hardware Refresh
+TASK-47,Prepare quote for Sakura Design Studio,Related to Sakura Managed Services.,9/13/2026 16:30,Medium,Not started,To-do,ravi.menon@focuscrm.demo,ananya.hansen@sakuradesignstudio.com,Sakura Managed Services
+TASK-48,Book QBR with Indigo Learning,Related to Indigo Integration Project.,10/1/2026 09:15,High,In progress,Call,sofia.martinez@focuscrm.demo,mason.vasquez@indigolearning.com,Indigo Integration Project
+TASK-49,Review requirements from Cascade Veterinary,Related to Cascade Annual Subscription.,9/21/2026 14:00,High,Completed,To-do,ravi.menon@focuscrm.demo,noah.lopez@cascadeveterinary.com,Cascade Annual Subscription
+TASK-50,Send proposal to Waverly Fashion Group,Related to Waverly Enterprise License.,9/27/2026 09:45,Low,Not started,Email,sofia.martinez@focuscrm.demo,elijah.dubois@waverlyfashiongroup.com,Waverly Enterprise License
+TASK-51,Follow up with Aurora Biotech,Related to Aurora Security Audit.,9/20/2026 15:30,Medium,Completed,Call,aisha.khan@focuscrm.demo,hannah.quinn@aurorabiotech.com,Aurora Security Audit
+TASK-52,Prepare quote for Evergreen Dental Group,Related to Evergreen Security Audit (2).,10/2/2026 16:45,High,In progress,To-do,daniel.okafor@focuscrm.demo,lucia.dubois@evergreendentalgroup.com,Evergreen Security Audit (2)
+TASK-53,Follow up with Cascade Veterinary,Related to Cascade Enterprise License (2).,10/7/2026 15:15,Low,Not started,Call,daniel.okafor@focuscrm.demo,elijah.brooks@cascadeveterinary.com,Cascade Enterprise License (2)
+TASK-54,Share contract with Sakura Design Studio,Keep Jack warm.,9/16/2026 17:15,High,Completed,Email,ravi.menon@focuscrm.demo,jack.thompson@sakuradesignstudio.com,
+TASK-55,Send proposal to Orbit Telecom,Related to Orbit Data Migration.,9/13/2026 13:00,Medium,Completed,Email,sofia.martinez@focuscrm.demo,nora.nguyen@orbittelecom.com,Orbit Data Migration
+TASK-56,Book QBR with Thornbury Architects,Keep Leila warm.,9/22/2026 17:00,Medium,Not started,Call,daniel.okafor@focuscrm.demo,leila.bennett@thornburyarchitects.com,
+TASK-57,Send proposal to Sakura Design Studio,Related to Sakura Annual Subscription.,10/3/2026 10:15,Medium,Not started,Email,ravi.menon@focuscrm.demo,freya.wright@sakuradesignstudio.com,Sakura Annual Subscription
+TASK-58,Send proposal to Ironwood Construction,Related to Ironwood Website Rebuild.,9/16/2026 14:15,High,Not started,Email,sofia.martinez@focuscrm.demo,emma.dubois@ironwoodconstruction.com,Ironwood Website Rebuild
+TASK-59,Share contract with Windmill Data Co.,Related to Windmill Hardware Refresh.,9/13/2026 13:45,Low,Completed,Email,aisha.khan@focuscrm.demo,leila.kim@windmilldataco.com,Windmill Hardware Refresh
+TASK-60,Book QBR with Windmill Data Co.,Related to Windmill Annual Subscription.,10/3/2026 16:45,Low,In progress,Call,sofia.martinez@focuscrm.demo,leila.kim@windmilldataco.com,Windmill Annual Subscription
+TASK-61,Prepare quote for Summit Legal Partners,Related to Summit Security Audit.,9/17/2026 13:00,High,Completed,To-do,ravi.menon@focuscrm.demo,lucas.patel@summitlegalpartners.com,Summit Security Audit
+TASK-62,Book QBR with Windmill Data Co.,Related to Windmill Hardware Refresh.,10/3/2026 15:15,Medium,In progress,Call,aisha.khan@focuscrm.demo,leila.kim@windmilldataco.com,Windmill Hardware Refresh
+TASK-63,Send invoice to Indigo Learning,Related to Indigo Integration Project.,9/25/2026 14:45,Medium,Completed,Email,sofia.martinez@focuscrm.demo,mason.vasquez@indigolearning.com,Indigo Integration Project
+TASK-64,Book QBR with Cascade Veterinary,Related to Cascade Annual Subscription.,9/24/2026 13:30,Medium,Completed,Call,daniel.okafor@focuscrm.demo,noah.lopez@cascadeveterinary.com,Cascade Annual Subscription
+TASK-65,Follow up with Silverleaf Hotels,Keep Ava warm.,10/16/2026 17:15,Medium,Not started,Call,mmitchell@hubspot.com,ava.anderson@silverleafhotels.com,
+TASK-66,Prepare quote for Windmill Data Co.,Related to Windmill Annual Subscription.,10/12/2026 13:00,Medium,Not started,To-do,sofia.martinez@focuscrm.demo,leila.kim@windmilldataco.com,Windmill Annual Subscription
+TASK-67,Send proposal to Helios Energy Partners,Related to Helios Training Workshop.,10/10/2026 15:15,High,Completed,Email,mmitchell@hubspot.com,logan.garcia@heliosenergypartners.com,Helios Training Workshop
+TASK-68,Follow up with Windmill Data Co.,Related to Windmill Hardware Refresh.,9/18/2026 09:15,Low,Completed,Call,aisha.khan@focuscrm.demo,leila.kim@windmilldataco.com,Windmill Hardware Refresh
+TASK-69,Prepare quote for Meridian Freight Lines,Keep Liam warm.,9/17/2026 17:15,Medium,Completed,To-do,daniel.okafor@focuscrm.demo,liam.bennett@meridianfreightlines.com,
+TASK-70,Review requirements from Pioneer Agritech,Related to Pioneer Annual Subscription.,9/27/2026 14:30,Medium,Not started,To-do,daniel.okafor@focuscrm.demo,james.quinn@pioneeragritech.com,Pioneer Annual Subscription

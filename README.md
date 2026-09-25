@@ -9,12 +9,24 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
+The public product website is at `/`, sign-in is at `/login`, and the authenticated CRM dashboard is at `/dashboard`.
+
 On first load the app imports every CSV in `Data/` (HubSpot sample import files).
 Sign in with a user found in the data (password `demo123`), e.g. `mmitchell@hubspot.com`.
 
+## Focus AI assistant
+
+Click **Ask AI** to ask questions about the CRM data. To use Claude, copy `.env.local.example` to
+`.env.local` and set `ANTHROPIC_API_KEY`. The route ([src/app/api/assistant/route.ts](src/app/api/assistant/route.ts))
+uses `claude-opus-5` with streaming, prompt caching of the data snapshot and server-side refusal
+fallbacks. Without a key the assistant runs in offline mode with built-in answers
+([src/lib/assistant.ts](src/lib/assistant.ts)).
+
 ## Data
 
-- `Data/*.csv` is the only data source. There is no generated demo data.
+- `Data/*.csv` is the only data source: the original HubSpot sample files plus `Generated - *.csv`
+  files made by `npm run generate-data` ([scripts/generate-sample-data.mjs](scripts/generate-sample-data.mjs)),
+  which add a realistic volume in the same HubSpot format (dates relative to the day it runs).
 - `GET /api/import` ([src/app/api/import/route.ts](src/app/api/import/route.ts)) reads the files and
   [src/lib/import/hubspot.ts](src/lib/import/hubspot.ts) maps them. Columns are detected from each header, so one
   row can create and link several records (company + contact + deal + note…).

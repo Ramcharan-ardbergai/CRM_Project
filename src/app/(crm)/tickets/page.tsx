@@ -43,7 +43,9 @@ export default function TicketsPage() {
   const open = tickets.filter((t) => OPEN_TICKET_STATUSES.includes(t.status));
   const resolved = tickets.filter((t) => t.resolvedAt);
   const avgHours = resolved.length ? resolved.reduce((s, t) => s + (new Date(t.resolvedAt!).getTime() - new Date(t.createdAt).getTime()), 0) / resolved.length / 3_600_000 : 0;
-  const resolvedWeek = resolved.filter((t) => Date.now() - new Date(t.resolvedAt!).getTime() < 7 * DAY).length;
+  const resolvedWeek = tickets.filter(
+    (t) => t.status === "Resolved" && t.resolvedAt && Date.now() - new Date(t.resolvedAt).getTime() < 7 * DAY,
+  ).length;
 
   const columns: Column<Ticket>[] = [
     { id: "id", header: "ID", sortValue: (t) => t.number, cell: (t) => <span className="font-medium text-muted">#{t.number}</span> },
@@ -77,15 +79,31 @@ export default function TicketsPage() {
           { label: "Urgent / High", value: open.filter((t) => t.priority === "Urgent" || t.priority === "High").length, icon: AlertTriangle, tone: "red" as const },
           { label: "Avg resolution", value: avgHours >= 24 ? `${(avgHours / 24).toFixed(1)} days` : `${Math.round(avgHours)} hrs`, icon: Clock, tone: "amber" as const },
           { label: "Resolved (7 days)", value: resolvedWeek, icon: CheckCircle2, tone: "green" as const },
-        ].map((s) => (
-          <Card key={s.label} className="flex items-center gap-3 p-4">
+        ].map((s) => {
+          const active = (s.label === "Open tickets" && status === "open" && !priority) ||
+            (s.label === "Urgent / High" && status === "all" && priority === "High") ||
+            (s.label === "Resolved (7 days)" && status === "Resolved" && !priority);
+          return (
+          <button
+            key={s.label}
+            type="button"
+            onClick={() => {
+              if (s.label === "Open tickets") { setStatus("open"); setPriority(""); }
+              if (s.label === "Urgent / High") { setStatus("all"); setPriority("High"); }
+              if (s.label === "Resolved (7 days)") { setStatus("Resolved"); setPriority(""); }
+            }}
+            className="text-left"
+          >
+          <Card className={`flex items-center gap-3 p-4 transition-all hover:border-line-strong ${active ? "border-primary ring-2 ring-primary/20 bg-primary-soft/40" : ""}`}>
             <IconTile icon={s.icon} tone={s.tone} />
             <div>
               <p className="text-xs text-muted">{s.label}</p>
               <p className="text-xl font-semibold text-fg">{s.value}</p>
             </div>
           </Card>
-        ))}
+          </button>
+          );
+        })}
       </div>
 
       <Tabs

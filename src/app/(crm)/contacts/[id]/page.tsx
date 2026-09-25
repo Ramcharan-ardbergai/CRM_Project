@@ -2,12 +2,12 @@
 
 import { ArrowLeft, Building2, CalendarDays, CheckSquare, FileText, Globe, Handshake, Mail, MoreHorizontal, Pencil, Phone, Trash2, User, UserX } from "lucide-react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { NoteComposer } from "@/components/crm/NoteComposer";
 import { ActivityItem, CompanyLink, ExtraFields, ContactStatusBadge, deleteRecord, InfoRow, OwnerCell, QuickAction, StageBadge, StatBox, TaskRow, Timeline } from "@/components/crm/shared";
 import { Menu } from "@/components/ui/overlay";
-import { Avatar, Button, Card, CardHeader, EmptyState, Tabs } from "@/components/ui/primitives";
+import { Avatar, Button, Card, CardHeader, CompanyAvatar, EmptyState, Tabs } from "@/components/ui/primitives";
 import { contactName, useMoney } from "@/lib/hooks";
 import { isOpen } from "@/lib/metrics";
 import { useCRM } from "@/lib/store";
@@ -19,6 +19,7 @@ type Tab = "overview" | "deals" | "activities" | "tasks" | "notes";
 export default function ContactDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const money = useMoney();
   const contact = useCRM((s) => s.contacts.find((c) => c.id === id));
   const company = useCRM((s) => s.companies.find((c) => c.id === contact?.companyId));
@@ -26,6 +27,18 @@ export default function ContactDetailPage() {
   const allActivities = useCRM((s) => s.activities);
   const allTasks = useCRM((s) => s.tasks);
   const [tab, setTab] = useState<Tab>("overview");
+
+  useEffect(() => {
+    if (!contact) return;
+    const action = searchParams.get("action");
+    if (action === "call" || action === "email") {
+      openForm("activity", { defaults: { contactId: contact.id, companyId: contact.companyId, type: action, subject: `${action === "call" ? "Call with" : "Email to"} ${contactName(contact)}` } });
+      router.replace(`/contacts/${contact.id}`);
+    } else if (action === "task") {
+      openForm("task", { defaults: { contactId: contact.id, companyId: contact.companyId, title: `Follow up with ${contactName(contact)}` } });
+      router.replace(`/contacts/${contact.id}`);
+    }
+  }, [contact, router, searchParams]);
 
   const deals = useMemo(() => allDeals.filter((d) => d.contactId === id), [allDeals, id]);
   const activities = useMemo(() => allActivities.filter((a) => a.contactId === id).sort((a, b) => b.date.localeCompare(a.date)), [allActivities, id]);
@@ -97,7 +110,7 @@ export default function ContactDetailPage() {
             <Card className="p-5">
               <p className="text-xs font-medium tracking-wide text-muted uppercase">Company</p>
               <Link href={`/companies/${company.id}`} className="group mt-3 flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface-2 text-muted"><Building2 className="h-5 w-5" /></span>
+                <CompanyAvatar name={company.name} size={44} />
                 <div>
                   <p className="font-semibold text-fg group-hover:text-primary">{company.name}</p>
                   <p className="text-xs text-muted">{[company.industry, company.city, company.website].filter(Boolean).join(" · ")}</p>

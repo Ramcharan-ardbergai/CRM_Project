@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Building2, CheckSquare, CornerDownLeft, Handshake, Kanban, LifeBuoy, Plus, Search, User, type LucideIcon } from "lucide-react";
+import { ArrowRight, Building2, CheckSquare, CornerDownLeft, Handshake, Kanban, LifeBuoy, Plus, Search, Sparkles, User, type LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -53,6 +53,7 @@ export function CommandSearch() {
     const term = q.trim().toLowerCase();
     if (!term) {
       return [
+        { id: "ai", group: "Quick actions", icon: Sparkles, title: "Ask Focus AI", meta: "Questions about your CRM data", run: () => useUI.getState().setAssistantOpen(true) },
         { id: "n-contact", group: "Quick actions", icon: Plus, title: "Create contact", meta: "Add a new person", run: () => openForm("contact") },
         { id: "n-deal", group: "Quick actions", icon: Plus, title: "Create deal", meta: "Start a new opportunity", run: () => openForm("deal") },
         { id: "n-task", group: "Quick actions", icon: Plus, title: "Create task", meta: "Plan a follow-up", run: () => openForm("task") },
