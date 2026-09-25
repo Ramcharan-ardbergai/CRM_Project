@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarClock, Plus, Search, Zap } from "lucide-react";
+import { CalendarClock, ChevronLeft, ChevronRight, Plus, Search, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ActivityIcon, ActivityItem } from "@/components/crm/shared";
 import { Button, Card, CardHeader, EmptyState, Input, PageHeader, Segmented, Select, Tabs } from "@/components/ui/primitives";
@@ -12,6 +12,11 @@ import { DAY, dayLabel, formatTime, isSameDay, startOfDay } from "@/lib/utils";
 
 const PAGE = 30;
 
+function Pager({ page, total, onChange }: { page: number; total: number; onChange: (page: number) => void }) {
+  if (total <= 1) return null;
+  return <div className="flex items-center justify-between border-t border-line px-5 py-3 text-xs text-muted"><span>Page {page + 1} of {total}</span><span className="flex gap-1"><Button size="icon-sm" variant="ghost" icon={ChevronLeft} disabled={!page} onClick={() => onChange(page - 1)} aria-label="Previous page" /><Button size="icon-sm" variant="ghost" icon={ChevronRight} disabled={page >= total - 1} onClick={() => onChange(page + 1)} aria-label="Next page" /></span></div>;
+}
+
 export default function ActivitiesPage() {
   const data = useData();
   const lookup = useLookup();
@@ -19,8 +24,8 @@ export default function ActivitiesPage() {
   const [status, setStatus] = useState<"all" | "planned" | "completed">("all");
   const [owner, setOwner] = useState("");
   const [q, setQ] = useState("");
-  const [upcomingLimit, setUpcomingLimit] = useState(PAGE);
-  const [limit, setLimit] = useState(PAGE);
+  const [historyPage, setHistoryPage] = useState(0);
+  const [upcomingPage, setUpcomingPage] = useState(0);
   const query = useDebounced(q).trim().toLowerCase();
 
   const filtered = useMemo(
@@ -37,25 +42,26 @@ export default function ActivitiesPage() {
   );
 
   const upcoming = useMemo(() => filtered.filter((a) => a.status === "planned").sort((a, b) => a.date.localeCompare(b.date)), [filtered]);
-  const visibleUpcoming = upcoming.slice(0, upcomingLimit);
   const history = useMemo(() => filtered.filter((a) => a.status === "completed").sort((a, b) => b.date.localeCompare(a.date)), [filtered]);
+  const upcomingPages = Math.max(1, Math.ceil(upcoming.length / PAGE));
+  const historyPages = Math.max(1, Math.ceil(history.length / PAGE));
 
   const grouped = useMemo(() => {
     const groups: { label: string; items: Activity[] }[] = [];
-    history.slice(0, limit).forEach((a) => {
+    history.slice(historyPage * PAGE, (historyPage + 1) * PAGE).forEach((a) => {
       const label = dayLabel(a.date);
       const last = groups.at(-1);
       if (last?.label === label) last.items.push(a);
       else groups.push({ label, items: [a] });
     });
     return groups;
-  }, [history, limit]);
+  }, [history, historyPage]);
 
   const today = filtered.filter((a) => isSameDay(a.date, new Date())).sort((a, b) => a.date.localeCompare(b.date));
   const weekAgo = startOfDay().getTime() - 6 * DAY;
   const weekCounts = ACTIVITY_TYPES.map((t) => ({
     ...t,
-    count: data.activities.filter((a) => a.type === t.id && a.status === "completed" && new Date(a.date).getTime() >= weekAgo).length,
+    count: filtered.filter((a) => a.type === t.id && a.status === "completed" && new Date(a.date).getTime() >= weekAgo).length,
   }));
   const weekMax = Math.max(1, ...weekCounts.map((w) => w.count));
 
@@ -70,7 +76,7 @@ export default function ActivitiesPage() {
       <Tabs
         className="mb-4"
         value={type}
-        onChange={(v) => { setType(v); setUpcomingLimit(PAGE); setLimit(PAGE); }}
+        onChange={(v) => { setType(v); setHistoryPage(0); setUpcomingPage(0); }}
         tabs={[
           { id: "all", label: "All", count: data.activities.length },
           ...ACTIVITY_TYPES.map((t) => ({ id: t.id, label: `${t.label}s`, count: data.activities.filter((a) => a.type === t.id).length })),
@@ -86,10 +92,10 @@ export default function ActivitiesPage() {
           <option value="">Everyone</option>
           {data.users.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
         </Select>
-        <Segmented className="ml-auto" value={status} onChange={setStatus} options={[{ id: "all", label: "All" }, { id: "planned", label: "Planned" }, { id: "completed", label: "Completed" }]} />
+        <Segmented className="ml-auto" value={status} onChange={(v) => { setStatus(v); setHistoryPage(0); setUpcomingPage(0); }} options={[{ id: "all", label: "All" }, { id: "planned", label: "Planned" }, { id: "completed", label: "Completed" }]} />
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-12">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
         <div className="space-y-6 xl:col-span-8">
           <div className="hidden">
             <div className="relative w-full sm:w-72">
@@ -112,32 +118,26 @@ export default function ActivitiesPage() {
           {upcoming.length > 0 && (
             <Card>
               <CardHeader title="Upcoming" subtitle={`${upcoming.length} planned`} />
-            <div className="divide-y divide-line px-5 pb-1">
-                {visibleUpcoming.map((a) => <div key={a.id} className="py-4 first:pt-0 last:pb-4"><ActivityItem activity={a} /></div>)}
-                {upcoming.length > upcomingLimit && (
-                  <Button className="my-4 w-full" onClick={() => setUpcomingLimit((l) => l + PAGE)}>
-                    Load more ({upcoming.length - upcomingLimit} remaining)
-                  </Button>
-                )}
+              <div className="space-y-5 px-5 pb-5">
+                {upcoming.slice(upcomingPage * PAGE, (upcomingPage + 1) * PAGE).map((a) => <ActivityItem key={a.id} activity={a} />)}
               </div>
+              <Pager page={upcomingPage} total={upcomingPages} onChange={setUpcomingPage} />
             </Card>
           )}
 
           {grouped.length > 0 && (
             <Card>
               <CardHeader title="History" subtitle={`${history.length} completed activities`} />
-              <div className="px-5 pb-5">
+              <div className="scroll-thin max-h-[640px] overflow-y-auto px-5 pb-5">
                 {grouped.map((g) => (
                   <div key={g.label} className="mb-6 last:mb-0">
                     <p className="mb-3 text-xs font-semibold tracking-wide text-subtle uppercase">{g.label}</p>
-                    <div className="divide-y divide-line">
-                      {g.items.map((a) => <div key={a.id} className="relative py-4 first:pt-0 last:pb-0"><ActivityItem activity={a} /></div>)}
+                    <div className="space-y-5">
+                      {g.items.map((a) => <div key={a.id} className="relative"><ActivityItem activity={a} /></div>)}
                     </div>
                   </div>
                 ))}
-                {history.length > limit && (
-                  <Button className="mt-2 w-full" onClick={() => setLimit((l) => l + PAGE)}>Load more ({history.length - limit} remaining)</Button>
-                )}
+                <Pager page={historyPage} total={historyPages} onChange={setHistoryPage} />
               </div>
             </Card>
           )}
@@ -150,14 +150,14 @@ export default function ActivitiesPage() {
               {today.length === 0 ? (
                 <EmptyState icon={CalendarClock} title="Nothing scheduled" className="py-6" />
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {today.map((a) => (
-                    <div key={a.id} className="grid min-h-12 grid-cols-[4.25rem_2rem_minmax(0,1fr)] items-start gap-3 rounded-lg px-1 py-2">
-                      <span className="pt-1 text-xs font-medium tabular-nums text-muted">{formatTime(a.date)}</span>
-                      <ActivityIcon type={a.type} className="mt-0.5 h-8 w-8" />
-                      <div className="min-w-0">
-                        <p className={a.status === "completed" ? "line-clamp-2 break-words text-sm leading-5 text-subtle line-through" : "line-clamp-2 break-words text-sm leading-5 font-medium text-fg"}>{a.subject}</p>
-                        <p className="truncate text-xs text-muted">{lookup.companies.get(a.companyId ?? "")?.name || "No company linked"}</p>
+                    <div key={a.id} className="flex items-center gap-3">
+                      <span className="w-16 text-xs font-medium text-muted">{formatTime(a.date)}</span>
+                      <ActivityIcon type={a.type} className="h-7 w-7" />
+                      <div className="min-w-0 flex-1">
+                        <p className={a.status === "completed" ? "truncate text-sm text-subtle line-through" : "truncate text-sm font-medium text-fg"}>{a.subject}</p>
+                        <p className="truncate text-xs text-muted">{lookup.companies.get(a.companyId ?? "")?.name}</p>
                       </div>
                     </div>
                   ))}
@@ -170,7 +170,7 @@ export default function ActivitiesPage() {
             <CardHeader title="Last 7 Days" subtitle="Completed activities by type" />
             <div className="space-y-3 px-5 pb-5">
               {weekCounts.map((w) => (
-                <div key={w.id} className="grid grid-cols-[2rem_5rem_minmax(0,1fr)_1.5rem] items-center gap-3">
+                <div key={w.id} className="flex items-center gap-3">
                   <ActivityIcon type={w.id} className="h-7 w-7" />
                   <span className="w-20 text-sm text-fg-2">{w.label}</span>
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-3">
