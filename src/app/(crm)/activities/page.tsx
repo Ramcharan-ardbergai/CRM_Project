@@ -156,7 +156,7 @@ export default function ActivitiesPage() {
                       <span className="w-16 text-xs font-medium text-muted">{formatTime(a.date)}</span>
                       <ActivityIcon type={a.type} className="h-7 w-7" />
                       <div className="min-w-0 flex-1">
-                        <p className={a.status === "completed" ? "truncate text-sm text-subtle line-through" : "truncate text-sm font-medium text-fg"}>{a.subject}</p>
+                        <p className={a.status === "completed" ? "truncate text-sm text-muted" : "truncate text-sm font-medium text-fg"}>{a.subject}</p>
                         <p className="truncate text-xs text-muted">{lookup.companies.get(a.companyId ?? "")?.name}</p>
                       </div>
                     </div>

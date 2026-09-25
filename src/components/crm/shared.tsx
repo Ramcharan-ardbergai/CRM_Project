@@ -3,6 +3,7 @@
 import {
   CalendarClock,
   Check,
+  CheckCircle2,
   FileText,
   GitCommitHorizontal,
   Mail,
@@ -147,7 +148,10 @@ export function TaskRow({ task, showAssignee = true, compact }: { task: Task; sh
           else openForm("task", { id: task.id });
         }}
       >
-        <p className={cn("truncate text-sm font-medium", task.status === "done" ? "text-subtle line-through" : "text-fg")}>{task.title}</p>
+        <p className={cn("flex items-center gap-1.5 truncate text-sm font-medium", task.status === "done" ? "text-muted" : "text-fg")}>
+          {task.status === "done" && <CheckCircle2 className="h-4 w-4 shrink-0 text-tone-green" />}
+          <span className="truncate">{task.title}</span>
+        </p>
         <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-muted">
           <span className={cn(state === "overdue" && "font-medium text-tone-red", state === "today" && "font-medium text-tone-amber")}>
             {state === "overdue" ? `Overdue · ${dayLabel(task.dueDate)}` : dayLabel(task.dueDate)}
@@ -207,6 +211,7 @@ export function ActivityItem({ activity, showRelations = true }: { activity: Act
           <CalendarClock className="h-3 w-3" />
           {formatDateTime(activity.date)}
           {owner && <> · {owner.name}</>}
+          {activity.status === "completed" && <span className="ml-1 inline-flex items-center gap-1 text-tone-green"><CheckCircle2 className="h-3.5 w-3.5" /> Completed</span>}
           {activity.status === "planned" && <Badge tone="amber" className="ml-1 py-0">Planned</Badge>}
         </p>
       </div>

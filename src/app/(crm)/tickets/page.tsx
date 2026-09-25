@@ -79,7 +79,11 @@ export default function TicketsPage() {
           { label: "Urgent / High", value: open.filter((t) => t.priority === "Urgent" || t.priority === "High").length, icon: AlertTriangle, tone: "red" as const },
           { label: "Avg resolution", value: avgHours >= 24 ? `${(avgHours / 24).toFixed(1)} days` : `${Math.round(avgHours)} hrs`, icon: Clock, tone: "amber" as const },
           { label: "Resolved (7 days)", value: resolvedWeek, icon: CheckCircle2, tone: "green" as const },
-        ].map((s) => (
+        ].map((s) => {
+          const active = (s.label === "Open tickets" && status === "open" && !priority) ||
+            (s.label === "Urgent / High" && status === "all" && priority === "High") ||
+            (s.label === "Resolved (7 days)" && status === "Resolved" && !priority);
+          return (
           <button
             key={s.label}
             type="button"
@@ -90,7 +94,7 @@ export default function TicketsPage() {
             }}
             className="text-left"
           >
-          <Card className="flex items-center gap-3 p-4 transition-all hover:border-line-strong">
+          <Card className={`flex items-center gap-3 p-4 transition-all hover:border-line-strong ${active ? "border-primary ring-2 ring-primary/20 bg-primary-soft/40" : ""}`}>
             <IconTile icon={s.icon} tone={s.tone} />
             <div>
               <p className="text-xs text-muted">{s.label}</p>
@@ -98,7 +102,8 @@ export default function TicketsPage() {
             </div>
           </Card>
           </button>
-        ))}
+          );
+        })}
       </div>
 
       <Tabs
