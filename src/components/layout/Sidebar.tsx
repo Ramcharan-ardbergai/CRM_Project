@@ -16,10 +16,10 @@ export function Logo({ collapsed }: { collapsed?: boolean }) {
   return (
     <div className="flex items-center gap-2.5">
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#5b6cff] to-[#3a45d6] text-white shadow-md shadow-primary/30">
-        <Target className="h-[1.125rem] w-[1.125rem]" strokeWidth={2.4} />
+        <Target className="h-[18px] w-[18px]" strokeWidth={2.4} />
       </span>
       {!collapsed && (
-        <span className="text-[1.0625rem] font-semibold tracking-tight text-fg">
+        <span className="text-[17px] font-semibold tracking-tight text-fg">
           Focus<span className="text-primary">CRM</span>
         </span>
       )}
@@ -63,7 +63,7 @@ export function Sidebar() {
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-line bg-surface transition-[width,transform] duration-200",
-          collapsed ? "w-[4.75rem]" : "w-[16.5rem]",
+          collapsed ? "w-[76px]" : "w-[264px]",
           mobileOpen ? "translate-x-0 shadow-pop" : "-translate-x-full lg:translate-x-0",
         )}
       >
@@ -79,7 +79,7 @@ export function Sidebar() {
         <button
           onClick={toggleSidebar}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="absolute top-[1.375rem] -right-3 z-10 hidden h-6 w-6 items-center justify-center rounded-full border border-line bg-surface text-muted shadow-card transition-colors hover:text-fg lg:flex"
+          className="absolute top-[22px] -right-3 z-10 hidden h-6 w-6 items-center justify-center rounded-full border border-line bg-surface text-muted shadow-card transition-colors hover:text-fg lg:flex"
         >
           <ChevronLeft className={cn("h-3.5 w-3.5 transition-transform", collapsed && "rotate-180")} />
         </button>
@@ -89,7 +89,7 @@ export function Sidebar() {
           <Menu
             align="left"
             width="w-60"
-            header={<p className="px-2.5 pt-1.5 pb-1 text-[.6875rem] font-medium tracking-wider text-subtle uppercase">Workspace</p>}
+            header={<p className="px-2.5 pt-1.5 pb-1 text-[11px] font-medium tracking-wider text-subtle uppercase">Workspace</p>}
             trigger={(p) => (
               <button
                 {...p}
@@ -135,7 +135,7 @@ export function Sidebar() {
               {collapsed ? (
                 <div className="mx-auto mb-2 h-px w-6 bg-line" />
               ) : (
-                <p className="mb-1.5 px-3 text-[.6875rem] font-semibold tracking-wider text-subtle uppercase">{group.section}</p>
+                <p className="mb-1.5 px-3 text-[11px] font-semibold tracking-wider text-subtle uppercase">{group.section}</p>
               )}
               <ul className="space-y-0.5">
                 {group.items.map((item) => {
@@ -153,14 +153,14 @@ export function Sidebar() {
                             active ? "bg-primary-soft text-primary" : "text-fg-2 hover:bg-surface-2 hover:text-fg",
                           )}
                         >
-                          {active && <span className="absolute top-1.5 bottom-1.5 -left-3 w-[.1875rem] rounded-r-full bg-primary" />}
-                          <item.icon className="h-[1.125rem] w-[1.125rem] shrink-0" strokeWidth={active ? 2.3 : 1.9} />
+                          {active && <span className="absolute top-1.5 bottom-1.5 -left-3 w-[3px] rounded-r-full bg-primary" />}
+                          <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={active ? 2.3 : 1.9} />
                           {!collapsed && <span className="flex-1">{item.label}</span>}
                           {count > 0 &&
                             (collapsed ? (
                               <span className="absolute top-1 right-2.5 h-2 w-2 rounded-full bg-[var(--red)] ring-2 ring-surface" />
                             ) : (
-                              <span className={cn("rounded-full px-1.5 py-px text-[.6875rem] font-semibold", item.badge === "tasks" ? "tone-red" : "tone-blue")}>
+                              <span className={cn("rounded-full px-1.5 py-px text-[11px] font-semibold", item.badge === "tasks" ? "tone-red" : "tone-blue")}>
                                 {count}
                               </span>
                             ))}

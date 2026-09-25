@@ -104,7 +104,7 @@ export function MarketingPage() {
         >
           <a href="#top" aria-label="FocusCRM home"><FocusBrand /></a>
           <div className="ml-10 hidden items-center gap-1 lg:flex">
-            {nav.map((item) => <a key={item.label} href={item.href} className="rounded-lg px-3 py-2 text-[.8125rem] font-medium text-[#5f667b] transition-colors hover:bg-[#f2f3f7] hover:text-[#151a32]">{item.label}</a>)}
+            {nav.map((item) => <a key={item.label} href={item.href} className="rounded-lg px-3 py-2 text-[13px] font-medium text-[#5f667b] transition-colors hover:bg-[#f2f3f7] hover:text-[#151a32]">{item.label}</a>)}
           </div>
           <div className="ml-auto hidden items-center gap-2 sm:flex">
             <Link href="/login" className="marketing-signin-button group flex h-10 items-center gap-2 rounded-[11px] px-[18px] text-sm font-semibold">
@@ -134,10 +134,10 @@ export function MarketingPage() {
               <p className="hero-enter hero-enter-1 flex items-center gap-2 text-xs font-semibold tracking-[.12em] text-[#4054e8] uppercase">
                 <span className="h-px w-8 bg-[#4054e8]" /> Clarity for every relationship
               </p>
-              <h1 id="hero-heading" className="hero-enter hero-enter-2 mt-6 text-[2.875rem] leading-[.97] font-semibold tracking-[-.055em] text-[#0d1229] sm:text-[3.5rem] lg:text-[3.875rem]">
+              <h1 id="hero-heading" className="hero-enter hero-enter-2 mt-6 text-[46px] leading-[.97] font-semibold tracking-[-.055em] text-[#0d1229] sm:text-[56px] lg:text-[62px]">
                 Keep every customer <span className="text-[#4054e8]">in focus.</span>
               </h1>
-              <p className="hero-enter hero-enter-3 mt-7 max-w-lg text-[.9375rem] leading-7 text-[#626a80] sm:text-[1.0625rem] sm:leading-8">
+              <p className="hero-enter hero-enter-3 mt-7 max-w-lg text-[15px] leading-7 text-[#626a80] sm:text-[17px] sm:leading-8">
                 FocusCRM brings conversations, opportunities, activity and customer context into one clear workspace—so the next move is never buried in the noise.
               </p>
               <div className="hero-enter hero-enter-4 mt-8 flex">
@@ -170,7 +170,7 @@ export function MarketingPage() {
             <div className="max-w-2xl">
               <div>
                 <p className="section-kicker">From noise to signal</p>
-                <h2 id="noise-heading" className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[2.875rem]">Customer work rarely happens in one place.</h2>
+                <h2 id="noise-heading" className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[46px]">Customer work rarely happens in one place.</h2>
               </div>
               <p className="mt-6 max-w-xl text-base leading-7 text-[#636a7c]">The email, the call, the proposal, the task and the outcome belong to the same relationship. FocusCRM puts them back into one continuous story.</p>
             </div>
@@ -192,7 +192,7 @@ export function MarketingPage() {
           <div className="section-reveal mx-auto grid max-w-7xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-[.82fr_1.18fr]">
             <div>
               <p className="section-kicker">A relationship, not a row</p>
-              <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[2.875rem]">Everything important. Nothing disconnected.</h2>
+              <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[46px]">Everything important. Nothing disconnected.</h2>
               <p className="mt-6 max-w-lg text-base leading-7 text-[#626b80]">FocusCRM treats contacts, companies, deals and activity as connected views of the same customer—not isolated modules your team has to reconcile.</p>
               <a href="#solutions" className="group mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#4054e8]">See how teams use it <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></a>
             </div>
@@ -204,7 +204,7 @@ export function MarketingPage() {
           <div className="section-reveal mx-auto grid max-w-7xl items-center gap-14 px-5 sm:px-8 xl:grid-cols-[.72fr_1.28fr]">
               <div>
                 <p className="text-xs font-semibold tracking-[.14em] text-[#91a0ff] uppercase">For sales teams</p>
-                <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] sm:text-[2.875rem]">Know which opportunities deserve attention.</h2>
+                <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] sm:text-[46px]">Know which opportunities deserve attention.</h2>
                 <p className="mt-6 max-w-lg text-base leading-7 text-white/60">Value, stage, owner, timing and customer history stay visible together. The board becomes a decision surface, not just a list of cards.</p>
                 <a href="#customer-success" className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#aab4ff]">Follow the customer story <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></a>
               </div>
@@ -216,7 +216,7 @@ export function MarketingPage() {
           <div className="section-reveal mx-auto grid max-w-7xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-[.78fr_1.22fr]">
             <div>
               <p className="section-kicker">For customer success</p>
-              <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[2.875rem]">Never lose the context behind a conversation.</h2>
+              <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[46px]">Never lose the context behind a conversation.</h2>
               <p className="mt-6 max-w-lg text-base leading-7 text-[#687084]">See the relationship before you reply: who the customer is, what they bought, what was promised and what the team needs to do next.</p>
               <div className="mt-9 space-y-4 border-l border-[#dfe2ea] pl-5">
                 {["One shared customer timeline", "Sales and support context together", "Notes and next steps attached to the account"].map((item) => <p key={item} className="flex items-center gap-3 text-sm text-[#4f576c]"><Check className="h-4 w-4 text-[#4054e8]" />{item}</p>)}
@@ -231,7 +231,7 @@ export function MarketingPage() {
             <div className="grid gap-12 lg:grid-cols-[.68fr_1.32fr]">
               <div>
                 <p className="section-kicker">For leadership</p>
-                <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[2.875rem]">See where the business is actually moving.</h2>
+                <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[46px]">See where the business is actually moving.</h2>
                 <p className="mt-6 max-w-lg text-base leading-7 text-[#687084]">Performance is calculated from live customer work—not assembled in a separate reporting process.</p>
               </div>
               <div className="leadership-signal border-l border-[#dfe2ea] pl-6 sm:pl-10">
@@ -254,7 +254,7 @@ export function MarketingPage() {
           <div className="section-reveal mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-2 lg:items-center">
             <div>
               <p className="section-kicker">For operations</p>
-              <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[2.875rem]">Turn customer activity into clear action.</h2>
+              <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#151a31] sm:text-[46px]">Turn customer activity into clear action.</h2>
               <p className="mt-6 max-w-lg text-base leading-7 text-[#687084]">Tasks, calls, meetings and ownership form one visible workday. Everyone can see what is due and why it matters.</p>
             </div>
             <div className="lg:pl-12">
@@ -269,7 +269,7 @@ export function MarketingPage() {
           <div className="section-reveal mx-auto max-w-7xl px-5 sm:px-8">
             <div className="max-w-3xl">
               <p className="section-kicker">Bring the relationship into view</p>
-              <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#11162e] sm:text-[2.875rem]">Less searching. More knowing what comes next.</h2>
+              <h2 className="mt-5 text-4xl leading-[1.04] font-semibold tracking-[-.045em] text-[#11162e] sm:text-[46px]">Less searching. More knowing what comes next.</h2>
             </div>
           </div>
         </section>

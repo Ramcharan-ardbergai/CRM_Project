@@ -17,7 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="font-sans">
-        <Providers>{children}</Providers>
+        <div className="application-scale-root">
+          <Providers>{children}</Providers>
+        </div>
       </body>
     </html>
   );

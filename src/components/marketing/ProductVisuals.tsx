@@ -46,7 +46,7 @@ function AnimatedMetric({ value, prefix = "", suffix = "", decimals = 0 }: { val
 
 export function DashboardPreview({ compact = false, showInsights = true, animateMetrics = false }: { compact?: boolean; showInsights?: boolean; animateMetrics?: boolean }) {
   return (
-    <div className={cn("product-stage relative mx-auto w-full min-w-0 max-w-full", compact ? "sm:max-w-[38.75rem]" : "sm:max-w-[67.5rem]")} aria-label="FocusCRM dashboard preview">
+    <div className={cn("product-stage relative mx-auto w-full min-w-0 max-w-full", compact ? "sm:max-w-[620px]" : "sm:max-w-[1080px]")} aria-label="FocusCRM dashboard preview">
       <div className="product-glow" aria-hidden="true" />
       <div className="product-window relative w-full min-w-0 max-w-full overflow-hidden rounded-[22px] border border-white/70 bg-[#f8f9fc] shadow-[0_40px_100px_-34px_rgba(20,28,75,.5),0_8px_30px_-12px_rgba(18,25,60,.18)]">
         <div className="flex h-10 items-center gap-2 border-b border-[#e9eaf1] bg-white/90 px-4">
@@ -55,8 +55,8 @@ export function DashboardPreview({ compact = false, showInsights = true, animate
           <span className="h-2.5 w-2.5 rounded-full bg-[#61c78b]" />
           <span className="mx-auto h-5 w-40 rounded-md bg-[#f1f2f7]" />
         </div>
-        <div className="flex min-h-[26.25rem] sm:min-h-[31.25rem]">
-          <aside className="hidden w-[10.5rem] shrink-0 border-r border-[#e9eaf1] bg-white px-3 py-4 sm:block">
+        <div className="flex min-h-[420px] sm:min-h-[500px]">
+          <aside className="hidden w-[168px] shrink-0 border-r border-[#e9eaf1] bg-white px-3 py-4 sm:block">
             <div className="mb-6 flex items-center gap-2 px-2">
               <span className="brand-mark flex h-7 w-7 items-center justify-center rounded-lg text-white"><Target className="h-3.5 w-3.5" /></span>
               <span className="text-[11px] font-bold tracking-tight text-[#151a35]">Focus<span className="text-[#4054e8]">CRM</span></span>
@@ -101,7 +101,7 @@ export function DashboardPreview({ compact = false, showInsights = true, animate
                   <div><p className="text-[11px] font-semibold text-[#1b2038]">Revenue momentum</p><p className="text-[8px] text-[#8b90a0]">Closed-won · last 12 months</p></div>
                   <span className="rounded-md bg-[#f3f4f8] px-2 py-1 text-[8px] text-[#676d80]">$428,200</span>
                 </div>
-                <svg viewBox="0 0 520 170" className="mt-2 h-[7rem] w-full sm:h-[9.0625rem]" role="img" aria-label="Revenue chart rising over twelve months">
+                <svg viewBox="0 0 520 170" className="mt-2 h-[112px] w-full sm:h-[145px]" role="img" aria-label="Revenue chart rising over twelve months">
                   <defs><linearGradient id="hero-chart" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4054e8" stopOpacity=".24"/><stop offset="1" stopColor="#4054e8" stopOpacity="0"/></linearGradient></defs>
                   {[30, 70, 110, 150].map((y) => <line key={y} x1="0" x2="520" y1={y} y2={y} stroke="#eef0f5" strokeDasharray="4 5" />)}
                   <path d="M0 145 C35 142 47 128 78 130 S125 105 157 111 S205 84 242 91 S292 75 323 78 S371 48 404 58 S461 25 520 28 L520 170 L0 170Z" fill="url(#hero-chart)" className="chart-area" />

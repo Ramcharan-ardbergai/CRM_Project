@@ -72,14 +72,14 @@ function Notifications() {
         {unread > 0 && <span className="absolute top-2 right-2.5 h-2 w-2 rounded-full bg-[var(--red)] ring-2 ring-bg" />}
       </Button>
       {open && (
-        <div className="absolute right-0 z-40 mt-2 w-[min(22.5rem,calc(100vw-2rem))] animate-pop-in overflow-hidden rounded-2xl border border-line bg-surface shadow-pop">
+        <div className="absolute right-0 z-40 mt-2 w-[min(360px,calc(100vw-2rem))] animate-pop-in overflow-hidden rounded-2xl border border-line bg-surface shadow-pop">
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
             <p className="text-sm font-semibold text-fg">Notifications {unread > 0 && <span className="tone-red ml-1 rounded-full px-1.5 text-xs">{unread}</span>}</p>
             <button className="text-xs font-medium text-primary hover:underline" onClick={() => setSeen(new Set(items.map((i) => i.id)))}>
               Mark all read
             </button>
           </div>
-          <div className="scroll-thin max-h-[23.75rem] overflow-y-auto">
+          <div className="scroll-thin max-h-[380px] overflow-y-auto">
             {items.length === 0 ? (
               <p className="px-4 py-10 text-center text-sm text-muted">You&apos;re all caught up 🎉</p>
             ) : (

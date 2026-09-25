@@ -142,10 +142,17 @@
   box-shadow: 0 8px 20px -8px rgba(64, 84, 232, 0.8), inset 0 1px 0 rgba(255,255,255,.35);
 }
 
-/* Recreate the approved 80%-zoom desktop density through the real layout unit.
-   Rendering, hit testing, fixed positioning, and responsive breakpoints stay native. */
+/* Chromium's layout-aware zoom reproduces the approved browser-80% reference
+   at browser 100%. Width/height compensation keeps the usable viewport whole. */
 @media (min-width: 1024px) {
-  html { font-size: 80%; }
+  .application-scale-root {
+    width: 125vw;
+    min-height: 125vh;
+    zoom: .8;
+  }
+  .application-scale-root .min-h-screen { min-height: 125vh; }
+  .application-scale-root .h-screen { height: 125vh; }
+  .marketing-page, .login-page { max-width: none !important; }
 }
 .marketing-primary-button {
   background: linear-gradient(135deg, #5367f1 0%, #4054e8 55%, #3343cb 100%);

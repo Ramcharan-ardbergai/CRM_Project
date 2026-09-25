@@ -48,7 +48,7 @@ export function Modal({ open, onClose, title, description, children, footer, siz
           <div className="flex items-start justify-between gap-4 border-b border-line px-6 py-4">
             <div>
               <h2 className="text-base font-semibold text-fg">{title}</h2>
-              {description && <p className="mt-0.5 text-[.8125rem] text-muted">{description}</p>}
+              {description && <p className="mt-0.5 text-[13px] text-muted">{description}</p>}
             </div>
             <Button variant="ghost" size="icon-sm" icon={X} onClick={onClose} aria-label="Close" />
           </div>
@@ -166,7 +166,7 @@ export function Toaster() {
             <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", toastColor[t.tone])} />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-fg">{t.title}</p>
-              {t.description && <p className="mt-0.5 text-[.8125rem] text-muted">{t.description}</p>}
+              {t.description && <p className="mt-0.5 text-[13px] text-muted">{t.description}</p>}
             </div>
             <button onClick={() => dismiss(t.id)} className="text-subtle hover:text-fg" aria-label="Dismiss">
               <X className="h-4 w-4" />

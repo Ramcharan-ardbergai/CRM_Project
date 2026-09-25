@@ -16,7 +16,7 @@ import { Topbar } from "./Topbar";
 function ShellSkeleton() {
   return (
     <div className="flex min-h-screen">
-      <div className="hidden w-[16.5rem] border-r border-line bg-surface p-5 lg:block">
+      <div className="hidden w-[264px] border-r border-line bg-surface p-5 lg:block">
         <Skeleton className="h-9 w-36" />
         <div className="mt-8 space-y-3">{Array.from({ length: 10 }, (_, i) => <Skeleton key={i} className="h-8" />)}</div>
       </div>
@@ -46,9 +46,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <Sidebar />
-      <div className={cn("flex min-h-screen flex-col transition-[padding] duration-200", collapsed ? "lg:pl-[4.75rem]" : "lg:pl-[16.5rem]")}>
+      <div className={cn("flex min-h-screen flex-col transition-[padding] duration-200", collapsed ? "lg:pl-[76px]" : "lg:pl-[264px]")}>
         <Topbar />
-        <main key={pathname} className="mx-auto w-full max-w-[92.5rem] flex-1 animate-slide-up px-4 py-6 md:px-6 lg:py-8">
+        <main key={pathname} className="mx-auto w-full max-w-[1480px] flex-1 animate-slide-up px-4 py-6 md:px-6 lg:py-8">
           {children}
         </main>
       </div>
